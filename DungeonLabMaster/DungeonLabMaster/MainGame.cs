@@ -15,9 +15,14 @@ public class MainGame
         mapa.AddItemToMap(3, 3, new Gold());
         mapa.AddItemToMap(1, 3, new Coin());
         mapa.AddWallToMap(19, 0);
+        mapa.AddWallSquareToMap(3, 20, 6, 33);
         mapa.DrawStraightWallLine(1, 1, 13, 1);
         mapa.DrawStraightWallLine(4, 0, 4, 18);
+        mapa.RemoveWallFromMap(5, 33);
         mapa.AddItemToMap(15, 15, new OneHandedSword());
+        mapa.AddItemToMap(5, 25, new TwoHandedSword());
+        mapa.AddItemToMap(4, 0, new Buckler());
+        mapa.AddItemToMap(7, 0, new OneHandedSword(name: "dragon slayer"));
         Console.WriteLine("Map generated. starting!");
         Thread.Sleep(1000);
         
@@ -29,7 +34,7 @@ public class MainGame
             bool keepRunning = true;
             while (keepRunning)
             {
-                mapa.PrintMap();
+                mapa.PrintRound();
                 ConsoleKey pressedKey = Console.ReadKey(true).Key;
                 switch (pressedKey)
                 {
@@ -44,6 +49,12 @@ public class MainGame
                         break;
                     case ConsoleKey.S:
                         mapa.TryMoveMainPlayer(1, 0);
+                        break;
+                    case ConsoleKey.E:
+                        mapa.PlayerTryPickUpItem();
+                        break;
+                    case ConsoleKey.I:
+                        mapa.QueryItemRemova();
                         break;
                     case ConsoleKey.Backspace:
                         keepRunning = false;

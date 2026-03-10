@@ -9,7 +9,7 @@ public class OneHandedSword : IWeapon, IItem
     }
     public int Damage { get; }
     public int Defense { get; }
-    public int Handness { get; } = 2;
+    public int Handness { get; } = 1;
     public string Name { get; }
     public string Description { get; }
     public char ItemMapName { get; } = 's';

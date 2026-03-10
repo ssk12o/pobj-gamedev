@@ -30,13 +30,14 @@ public struct Tile
     {
         if (!IsEmpty) return false;
         PrintValue = '#';
+        IsEmpty = false;
         NotAWallOrATrap = false;
         return true;
     }
 
     public bool RemoveWallHere()
     {
-        if(!NotAWallOrATrap) return false;
+        if(NotAWallOrATrap) return false;
         PrintValue = '.';
         IsEmpty = true;
         NotAWallOrATrap = false;

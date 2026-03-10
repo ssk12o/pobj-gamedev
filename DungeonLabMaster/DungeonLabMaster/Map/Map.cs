@@ -10,7 +10,7 @@ public class Map
     private int _height, _width;
     private Tile[,] _DungeonMap;
     // private List<IPlayerEnt>  _playerEnts;
-    private IPlayerEnt _player;
+    private Player _player;
 
     public bool TryMoveMainPlayer(int y, int x)
     {
@@ -30,8 +30,6 @@ public class Map
                 _DungeonMap[y, x] = new Tile();
             }
         }
-
-        // _playerEnts = new List<IPlayerEnt>();
         _player = new Player();
     }
 
@@ -61,37 +59,57 @@ public class Map
         if(!CheckIfTileIsEmpty(y, x)) return false;
         return _DungeonMap[y, x].PutWallHere();
     }
+
+    public bool AddWallSquareToMap(int y1, int x1, int y2, int x2)
+    {
+        if(!CheckIfPositionIsInMap(y1, x1)) return false;
+        if(!CheckIfPositionIsInMap(y2, x2)) return false;
+        
+        if (x1 > x2)
+        {
+            (x1, x2) = (x2, x1);
+        }
+        if (y1 > y2)
+        {
+            (y1, y2) = (y2, y1);
+        }
+        
+        DrawStraightWallLine(x1, y1, x2, y1);
+        DrawStraightWallLine(x1, y2, x2, y2);
+        DrawStraightWallLine(x1, y1, x1, y2);
+        DrawStraightWallLine(x2, y1, x2, y2);
+        return true;
+    }
     
     public bool RemoveWallFromMap(int y, int x)
     {
-        if(CheckIfTileIsReachable(y, x)) return false;
+        if(!CheckIfPositionIsInMap(y, x)) return false;
         return _DungeonMap[y, x].RemoveWallHere();
     }
 
     public bool DrawStraightWallLine(int x1, int y1, int x2, int y2)
     {
-        if(!CheckIfTileIsReachable(x1, y1) || !CheckIfPositionIsInMap(x2, y2)) return false;
+        if(!CheckIfPositionIsInMap(y1, x1) || !CheckIfPositionIsInMap(y2, x2)) return false;
         if (x1 == x2)
         {
             for (int y = y1; y <= y2; y++)
             {
-                _DungeonMap[y, x1].PutWallHere();
+                AddWallToMap(y,  x1);
             }
             return true;
         } else if (y1 == y2)
         {
             for (int x = x1; x <= x2; x++)
             {
-                _DungeonMap[y1, x].PutWallHere();
-                
+                AddWallToMap(y1, x);
             }
             return true;
         }
         return false;
     }
-    
 
-    public void PrintMap()
+
+    private void PrintMap()
     {
         StringBuilder sb = new StringBuilder();
         for (int y = 0; y < _height; y++)
@@ -107,6 +125,110 @@ public class Map
         
         Console.Clear();
         Console.WriteLine($"DungeonLabMaster map after round {_movementRound++}");
-        Console.WriteLine(sb.ToString());
+        Console.Write(sb.ToString());
+    }
+
+    private void PrintOverField()
+    {
+        string name;
+        char ch;
+        if (_DungeonMap[_player.PosY, _player.PosX].IsEmpty || _DungeonMap[_player.PosY, _player.PosX].Item == null )
+        {
+            name = "";
+            ch = ' ';
+        }
+        else
+        {
+            name = _DungeonMap[_player.PosY, _player.PosX].Item.Name;
+            ch = _DungeonMap[_player.PosY, _player.PosX].Item.ItemMapName;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.Append("[").Append(ch).Append("] ").Append(name);
+        if(name != "") sb.Append("\t- press E to equip ");
+        Console.Write(sb.AppendLine().ToString());
+    }
+
+    private void PrintPlayerStatsAndWeaponsAndInventory()
+    {
+        // StringBuilder health = _player.GetHpSb();
+        Console.WriteLine("----------------------------------------");
+        Console.Write(_player.GetHpSb().ToString());
+        // StringBuilder sb = _player.GetStats();
+        Console.Write(_player.GetHandsContent().ToString());
+        Console.WriteLine("----------------------------------------");
+        Console.Write(_player.GetStats().ToString());
+        Console.WriteLine("----------------------------------------");
+
+        Console.Write(_player.GetInventoryListSb().ToString());
+        Console.WriteLine("----------------------------------------");
+
+        
+    }
+
+    public void QueryItemRemova()
+    {
+        if (_player.NumberOfItemsInEquipment == 0)
+        {
+            Console.WriteLine("not enough items");
+            Thread.Sleep(1000);
+            return;
+        }
+        
+        int y = _player.PosY;
+        int x = _player.PosX;
+        if (!_DungeonMap[y, x].IsEmpty)
+        {
+            Console.WriteLine("Field is not empty");
+            return;
+        }
+        Console.WriteLine("Print number of item to be removed");
+        int itemNumber;
+        while(!int.TryParse(Console.ReadLine(), out itemNumber))
+        {
+            Console.WriteLine("Invalid item number");
+        }
+        IItem? item = _player.RemoveItemNoFromEquipment(itemNumber);
+        if (item != null)
+        {
+            _DungeonMap[y, x].PutItemHere(item);
+        }
+
+    }
+
+    public void PrintRound()
+    {
+        PrintMap();
+        PrintOverField();
+        PrintPlayerStatsAndWeaponsAndInventory();
+        
+    }
+
+    public bool PlayerTryPickUpItem()
+    {
+        int y = _player.PosY;
+        int x = _player.PosX;
+
+
+        if(_DungeonMap[y, x].IsEmpty) return false;
+        IItem? pickedUp = _DungeonMap[y, x].RemoveItemFromHere();
+        
+        Console.WriteLine("Put in inventory or try wieldind it? E or W");
+        bool spin = true;
+        while (spin)
+        {
+            ConsoleKey key = Console.ReadKey(true).Key;
+            switch (key)
+            {
+                case ConsoleKey.E:
+                    spin = false;
+                    _player.AddItemToEquipment(pickedUp);
+                    break;
+                case ConsoleKey.W:
+                    spin = false;
+                    _player.HandItem(pickedUp);
+                    break;
+            }
+        }
+        return true;
     }
 }
