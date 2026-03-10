@@ -2,7 +2,7 @@ using DungeonLabMaster.Items.Weapons;
 
 namespace DungeonLabMaster.Items;
 
-public class TwoHandedSword : IWeapon
+public class TwoHandedSword : IWeapon, IItem
 {
     public void Attack()
     {
@@ -13,6 +13,7 @@ public class TwoHandedSword : IWeapon
     public int Handness { get; } = 2;
     public string Name { get; }
     public string Description { get; }
+    public char ItemMapName { get; } = 'S';
 
     public TwoHandedSword(int damage = 50, int defense = 2, string name = "Sword", string description = "")
     {
@@ -20,5 +21,15 @@ public class TwoHandedSword : IWeapon
         Defense = defense;
         Name = name;
         Description = description;
+    }
+
+    public void AddToInventoryFomGround(IItem item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IItem RemoveFromInventory()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,7 +1,7 @@
 namespace DungeonLabMaster.Items.Weapons;
 
 
-public class OneHandedSword : IWeapon
+public class OneHandedSword : IWeapon, IItem
 {
     public void Attack()
     {
@@ -12,6 +12,7 @@ public class OneHandedSword : IWeapon
     public int Handness { get; } = 2;
     public string Name { get; }
     public string Description { get; }
+    public char ItemMapName { get; } = 's';
 
     public OneHandedSword(int damage = 20, int defense = 5, string name = "One handed Sword", string description = "")
     {
@@ -19,5 +20,15 @@ public class OneHandedSword : IWeapon
         Defense = defense;
         Name = name;
         Description = description;
+    }
+
+    public void AddToInventoryFomGround(IItem item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IItem RemoveFromInventory()
+    {
+        throw new NotImplementedException();
     }
 }

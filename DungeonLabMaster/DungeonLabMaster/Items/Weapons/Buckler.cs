@@ -1,7 +1,7 @@
 namespace DungeonLabMaster.Items.Weapons;
 
 
-public class Buckler : IWeapon
+public class Buckler : IWeapon, IItem
 {
     public void Attack()
     {
@@ -12,6 +12,7 @@ public class Buckler : IWeapon
     public int Handness { get; } = 1;
     public string Name { get; }
     public string Description { get; }
+    public char ItemMapName { get; } = 'o';
 
     public Buckler(int damage = 20, int defense = 5, string name = "Buckler", string description = "")
     {
@@ -19,5 +20,15 @@ public class Buckler : IWeapon
         Defense = defense;
         Name = name;
         Description = description;
+    }
+
+    public void AddToInventoryFomGround(IItem item)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IItem RemoveFromInventory()
+    {
+        throw new NotImplementedException();
     }
 }

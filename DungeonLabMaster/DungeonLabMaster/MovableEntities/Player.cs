@@ -8,6 +8,7 @@ public class Player: IPlayerEnt
     public int MaxHealth { get; set; }
     public int PosX { get; set; }
     public int PosY { get; set; }
+    
 
     public Player(int health = 100, int posX = 0, int posY = 0, string name = "Player", char mapChar = 'P')
     {

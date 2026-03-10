@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using DungeonLabMaster.Items;
+using DungeonLabMaster.Items.Weapons;
 
 namespace DungeonLabMaster;
 
@@ -16,6 +17,7 @@ public class MainGame
         mapa.AddWallToMap(19, 0);
         mapa.DrawStraightWallLine(1, 1, 13, 1);
         mapa.DrawStraightWallLine(4, 0, 4, 18);
+        mapa.AddItemToMap(15, 15, new OneHandedSword());
         Console.WriteLine("Map generated. starting!");
         Thread.Sleep(1000);
         
