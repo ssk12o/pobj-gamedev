@@ -15,7 +15,7 @@ public class TwoHandedSword : IWeapon, IItem
     public string Description { get; }
     public char ItemMapName { get; } = 'S';
 
-    public TwoHandedSword(int damage = 50, int defense = 2, string name = "Two Handed Sword", string description = "")
+    public TwoHandedSword(int damage = 50, int defense = 2, string name = "Two Handed Sword", string description = "Heavy, slow, but oh god, thats a sword.")
     {
         Damage = damage;
         Defense = defense;

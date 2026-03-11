@@ -4,8 +4,6 @@ public interface IItem
 {
     char ItemMapName { get; }
     string Name { get; }
-    
-    void AddToInventoryFomGround(IItem item);
-    IItem RemoveFromInventory();
+    string Description { get; }
     public int Handness {get; }
 }

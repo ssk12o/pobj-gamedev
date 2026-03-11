@@ -25,16 +25,7 @@ public class Torch: IItem
     public char ItemMapName { get; private set; } = 't';
     public string Name { get; } = "Torch";
     
-    
-    public void AddToInventoryFomGround(IItem item)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IItem RemoveFromInventory()
-    {
-        throw new NotImplementedException();
-    }
+    public  string Description { get; } = "The name explains everything.";
 
     public int Handness { get; } = 1;
 }

@@ -14,7 +14,7 @@ public class Buckler : IWeapon, IItem
     public string Description { get; }
     public char ItemMapName { get; } = 'o';
 
-    public Buckler(int damage = 20, int defense = 5, string name = "Buckler", string description = "")
+    public Buckler(int damage = 4, int defense = 18, string name = "Buckler", string description = "Small, light yet very fast shield. Still wouldnt want to get hit by it.")
     {
         Damage = damage;
         Defense = defense;

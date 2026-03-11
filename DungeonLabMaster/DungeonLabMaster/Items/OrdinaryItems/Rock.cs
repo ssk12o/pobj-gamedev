@@ -4,15 +4,7 @@ public class Rock: IItem
 {
     public char ItemMapName { get; } = 'r';
     public string Name { get; } = "Rock";
-    public void AddToInventoryFomGround(IItem item)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IItem RemoveFromInventory()
-    {
-        throw new NotImplementedException();
-    }
+    public string Description { get; } = "Just a rock. Not even shiny.";
 
     public int Handness { get; } = 1;
 }

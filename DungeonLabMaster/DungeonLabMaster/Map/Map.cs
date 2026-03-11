@@ -33,14 +33,14 @@ public class Map
         _player = new Player();
     }
 
-    private bool CheckIfPositionIsInMap(int y, int x)
+    private bool CheckIfPositionIsOnMap(int y, int x)
     {
         return x >= 0 && x < _width && y >= 0 && y < _height;
     }
 
     private bool CheckIfTileIsReachable(int y, int x)
     {
-        return CheckIfPositionIsInMap(y, x) && _DungeonMap[y, x].NotAWallOrATrap;
+        return CheckIfPositionIsOnMap(y, x) && _DungeonMap[y, x].NotAWallOrATrap;
     }
 
     private bool CheckIfTileIsEmpty(int y, int x)
@@ -60,10 +60,10 @@ public class Map
         return _DungeonMap[y, x].PutWallHere();
     }
 
-    public bool AddWallSquareToMap(int y1, int x1, int y2, int x2)
+    public bool DrawWallSquareToDungeonMap(int y1, int x1, int y2, int x2)
     {
-        if(!CheckIfPositionIsInMap(y1, x1)) return false;
-        if(!CheckIfPositionIsInMap(y2, x2)) return false;
+        if(!CheckIfPositionIsOnMap(y1, x1)) return false;
+        if(!CheckIfPositionIsOnMap(y2, x2)) return false;
         
         if (x1 > x2)
         {
@@ -74,22 +74,22 @@ public class Map
             (y1, y2) = (y2, y1);
         }
         
-        DrawStraightWallLine(x1, y1, x2, y1);
-        DrawStraightWallLine(x1, y2, x2, y2);
-        DrawStraightWallLine(x1, y1, x1, y2);
-        DrawStraightWallLine(x2, y1, x2, y2);
+        DrawWallStrightLIneToDungeonMap(x1, y1, x2, y1);
+        DrawWallStrightLIneToDungeonMap(x1, y2, x2, y2);
+        DrawWallStrightLIneToDungeonMap(x1, y1, x1, y2);
+        DrawWallStrightLIneToDungeonMap(x2, y1, x2, y2);
         return true;
     }
     
-    public bool RemoveWallFromMap(int y, int x)
+    public bool DrawRemoveWallTileFromMap(int y, int x)
     {
-        if(!CheckIfPositionIsInMap(y, x)) return false;
+        if(!CheckIfPositionIsOnMap(y, x)) return false;
         return _DungeonMap[y, x].RemoveWallHere();
     }
 
-    public bool DrawStraightWallLine(int x1, int y1, int x2, int y2)
+    public bool DrawWallStrightLIneToDungeonMap(int x1, int y1, int x2, int y2)
     {
-        if(!CheckIfPositionIsInMap(y1, x1) || !CheckIfPositionIsInMap(y2, x2)) return false;
+        if(!CheckIfPositionIsOnMap(y1, x1) || !CheckIfPositionIsOnMap(y2, x2)) return false;
         if (x1 == x2)
         {
             for (int y = y1; y <= y2; y++)
@@ -109,7 +109,7 @@ public class Map
     }
 
 
-    private void PrintMap()
+    private StringBuilder GenerateMapSb()
     {
         StringBuilder sb = new StringBuilder();
         for (int y = 0; y < _height; y++)
@@ -121,11 +121,8 @@ public class Map
             }
             sb.AppendLine();
         }
-        
-        
-        Console.Clear();
-        Console.WriteLine($"DungeonLabMaster map after round {_movementRound++}");
-        Console.Write(sb.ToString());
+
+        return sb;
     }
 
     private void PrintOverField()
@@ -150,19 +147,14 @@ public class Map
 
     private void PrintPlayerStatsAndWeaponsAndInventory()
     {
-        // StringBuilder health = _player.GetHpSb();
-        Console.WriteLine("----------------------------------------");
-        Console.Write(_player.GetHpSb().ToString());
-        // StringBuilder sb = _player.GetStats();
-        Console.Write(_player.GetHandsContent().ToString());
-        Console.WriteLine("----------------------------------------");
-        Console.Write(_player.GetStats().ToString());
-        Console.WriteLine("----------------------------------------");
-
-        Console.Write(_player.GetInventoryListSb().ToString());
-        Console.WriteLine("----------------------------------------");
-
-        
+        Console.Write("----------------------------------------\n" +
+                      _player.GetHpSb().ToString() +
+                      _player.GetHandsContent().ToString() +
+                      "----------------------------------------\n" +
+                      _player.GetStats().ToString() + 
+                      "----------------------------------------\n" +
+                      _player.GetInventoryListSb().ToString() +
+                      "----------------------------------------\n");
     }
 
     public void QueryItemRemova()
@@ -197,7 +189,8 @@ public class Map
 
     public void PrintRound()
     {
-        PrintMap();
+        Console.Clear();
+        Console.Write($"DungeonLabMaster after round {_movementRound++}:\n" + GenerateMapSb().ToString());
         PrintOverField();
         PrintPlayerStatsAndWeaponsAndInventory();
         

@@ -8,7 +8,7 @@ class Program
     {
         Console.WriteLine("Hello, World!");
         // Thread.Sleep(1000);
-        MainGame.doStuff();
+        MainGame.RunGame();
         
         Console.WriteLine("finished game. closing stuff");
 

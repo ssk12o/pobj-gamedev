@@ -1,12 +1,14 @@
 using System.ComponentModel;
+using System.Xml.Schema;
 using DungeonLabMaster.Items;
 using DungeonLabMaster.Items.Weapons;
+using DungeonLabMaster.Items.Weapons.OrdinaryItems;
 
 namespace DungeonLabMaster;
 
 public class MainGame
 {
-    public static void doStuff()
+    public static void RunGame()
     {
    
         Map.Map mapa = new Map.Map(20, 40);
@@ -15,14 +17,19 @@ public class MainGame
         mapa.AddItemToMap(3, 3, new Gold());
         mapa.AddItemToMap(1, 3, new Coin());
         mapa.AddWallToMap(19, 0);
-        mapa.AddWallSquareToMap(3, 20, 6, 33);
-        mapa.DrawStraightWallLine(1, 1, 13, 1);
-        mapa.DrawStraightWallLine(4, 0, 4, 18);
-        mapa.RemoveWallFromMap(5, 33);
+        mapa.DrawWallSquareToDungeonMap(3, 20, 6, 33);
+        mapa.DrawWallStrightLIneToDungeonMap(1, 1, 13, 1);
+        mapa.DrawWallStrightLIneToDungeonMap(4, 0, 4, 18);
+        mapa.DrawWallSquareToDungeonMap(15, 12, 19, 30);
+        mapa.DrawWallStrightLIneToDungeonMap(7, 13, 38, 13);
+        mapa.DrawRemoveWallTileFromMap(5, 33);
+        mapa.AddItemToMap(19, 35, new BigRock());
+        mapa.AddItemToMap(19, 34, new Rock());
+        mapa.AddItemToMap(19, 33, new Torch(20));
         mapa.AddItemToMap(15, 15, new OneHandedSword());
         mapa.AddItemToMap(5, 25, new TwoHandedSword());
         mapa.AddItemToMap(4, 0, new Buckler());
-        mapa.AddItemToMap(7, 0, new OneHandedSword(name: "dragon slayer"));
+        mapa.AddItemToMap(7, 0, new OneHandedSword(name: "Dragon slayer"));
         Console.WriteLine("Map generated. starting!");
         Thread.Sleep(1000);
         
