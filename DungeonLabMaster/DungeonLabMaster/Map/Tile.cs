@@ -40,7 +40,7 @@ public struct Tile
         if(NotAWallOrATrap) return false;
         PrintValue = '.';
         IsEmpty = true;
-        NotAWallOrATrap = false;
+        NotAWallOrATrap = true;
         return true;
     }
     

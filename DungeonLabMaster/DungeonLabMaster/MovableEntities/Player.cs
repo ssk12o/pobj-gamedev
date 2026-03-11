@@ -12,6 +12,8 @@ public class Player: IPlayerEnt
     public int PosX { get; set; }
     public int PosY { get; set; }
     public PlayerStatsT PlayerStats = new PlayerStatsT();
+    public int GoldCount { get; private set; } = 0;
+    public int CoinCount { get; private set; } = 0;
 
     public class PlayerStatsT
     {
@@ -49,7 +51,22 @@ public class Player: IPlayerEnt
         MapChar = mapChar;
         _inventory = startingInventory ?? new List<IItem>();
     }
+    
+    public void AddCoin(int amount){CoinCount += amount;}
+    public void AddGold(int amount){GoldCount += amount;}
 
+    public int GetCoins(int amount)
+    {
+        if (amount > CoinCount) return 0;
+        CoinCount  -= amount;
+        return amount;
+    }
+    public int GetGold(int amount)
+    {
+        if (amount > GoldCount) return 0;
+        GoldCount  -= amount;
+        return amount;
+    }
     public void HandItem(IItem item)
     {
         if (item.Handness == 2)
@@ -60,6 +77,7 @@ public class Player: IPlayerEnt
                 case HandsUsability.LeftUsed:
                     old = LeftHand;
                     AddItemToEquipment(old);
+                    LeftHand = null;
                     break;
                 
                 case HandsUsability.RightUsed or HandsUsability.TwoHanded:
@@ -70,11 +88,13 @@ public class Player: IPlayerEnt
                 case HandsUsability.BothUsed:
                     old = LeftHand;
                     AddItemToEquipment(old);
+                    LeftHand = null;
                     old = RightHand;
                     AddItemToEquipment(old);
                     break;
             }
 
+            _hands = HandsUsability.TwoHanded;
             RightHand = item;
             
         }
@@ -129,6 +149,15 @@ public class Player: IPlayerEnt
 
     public void AddItemToEquipment(IItem item)
     {
+        if (item.Name == "Gold")
+        {
+            AddGold(1);
+            return;
+        } else if (item.Name == "Coin")
+        {
+            AddCoin(1);
+            return;
+        }
         _inventory.Add(item);
     }
 
@@ -145,9 +174,11 @@ public class Player: IPlayerEnt
     {
         int i = 0;
         StringBuilder sb = new();
+        sb.AppendLine($"Amount of Gold {GoldCount}");
+        sb.AppendLine($"Amount of Coin {CoinCount}");
         foreach (IItem item in _inventory)
         {
-            sb.Append((i++).ToString()).Append(" - ").Append(item.Name).AppendLine();
+            sb.Append((i++).ToString()).Append($"\t{item.ItemMapName} - ").Append(item.Name).AppendLine();
         }
         return sb;
     }
