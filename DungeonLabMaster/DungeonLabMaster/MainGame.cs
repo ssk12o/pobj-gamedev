@@ -58,7 +58,11 @@ public class MainGame
                         mapa.TryMoveMainPlayer(1, 0);
                         break;
                     case ConsoleKey.E:
-                        mapa.PlayerTryPickUpItem();
+                        if (!mapa.PlayerTryPickUpItem())
+                        {
+                            mapa.PlayerPrintEquipmentLong();
+                            WaitForInput();
+                        };
                         break;
                     case ConsoleKey.I:
                         mapa.QueryItemRemova();
@@ -67,6 +71,11 @@ public class MainGame
                         keepRunning = false;
                         Console.WriteLine("thank you for using this game!");
                         break;
+                    case ConsoleKey.H:
+                        Console.Clear();
+                        PrintMenuOptions();
+                        WaitForInput();
+                        break;
                     default:
                         Console.WriteLine("invalid input");
                         Thread.Sleep(5000);
@@ -74,6 +83,21 @@ public class MainGame
                     
                 }
             }
+        }
+
+        void WaitForInput()
+        {
+            Console.WriteLine("press any key to continue...");
+            ConsoleKey pressed = Console.ReadKey(true).Key;
+        }
+        void PrintMenuOptions()
+        {
+            Console.Write("Welcome in help menu. Options:\n" +
+                          "\t - WSAD to move\n"+
+                          "\t - E to equip item (if possible) or print items in inventory\n"+
+                          "\t - I to remove item from equipment\n" +
+                          "\t - Backspace to exit game\n"+
+                          "\t - H to enter this menu\n");
         }
     }
 }

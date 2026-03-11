@@ -224,4 +224,10 @@ public class Map
         }
         return true;
     }
+
+    public void PlayerPrintEquipmentLong()
+    {
+        Console.Clear();
+        Console.Write(_player.GetInventoryContentsLongSb().ToString());
+    }
 }

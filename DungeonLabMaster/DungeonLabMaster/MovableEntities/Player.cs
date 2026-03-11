@@ -183,6 +183,19 @@ public class Player: IPlayerEnt
         return sb;
     }
 
+    public StringBuilder GetInventoryContentsLongSb()
+    {
+        StringBuilder sb = new();
+        sb.Append("----------------------------------------\nEquipment:\n----------------------------------------\n");
+        foreach (IItem item in _inventory)
+        {
+            sb.Append(item.Name).Append(" \t- ").Append(item.Description).AppendLine();
+        }
+        sb.Append("\n----------------------------------------\n");
+
+        return sb;
+    }
+
     public StringBuilder GetHpSb()
     {
         int percentage = (int)(10.0 * PlayerStats.Health / PlayerStats.MaxHealth);
