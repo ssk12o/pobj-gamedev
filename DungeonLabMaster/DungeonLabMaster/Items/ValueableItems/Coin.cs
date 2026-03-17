@@ -6,6 +6,7 @@ public class Coin: IItem
     public string Name { get; }
     public int Value { get; }
     public string Description { get; }
+    public bool IsWeapon { get; } =  false;
     
     public Coin(int value = 1)
     {
@@ -16,14 +17,5 @@ public class Coin: IItem
     }
 
     public int Handness { get; } = 1;
-
-    public void AddToInventoryFomGround(IItem item)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IItem RemoveFromInventory()
-    {
-        throw new NotImplementedException();
-    }
+    
 }

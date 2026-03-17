@@ -7,4 +7,6 @@ public class Rock: IItem
     public string Description { get; } = "Just a rock. Not even shiny.";
 
     public int Handness { get; } = 1;
+    public bool IsWeapon { get; } =  false;
+
 }

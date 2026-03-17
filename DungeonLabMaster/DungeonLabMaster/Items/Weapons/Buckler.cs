@@ -13,6 +13,7 @@ public class Buckler : IWeapon, IItem
     public string Name { get; }
     public string Description { get; }
     public char ItemMapName { get; } = 'o';
+    public bool IsWeapon { get; } =  true;
 
     public Buckler(int damage = 4, int defense = 18, string name = "Buckler", string description = "Small, light yet very fast shield. Still wouldnt want to get hit by it.")
     {
@@ -21,14 +22,5 @@ public class Buckler : IWeapon, IItem
         Name = name;
         Description = description;
     }
-
-    public void AddToInventoryFomGround(IItem item)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IItem RemoveFromInventory()
-    {
-        throw new NotImplementedException();
-    }
+    
 }

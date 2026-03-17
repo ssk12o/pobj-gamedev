@@ -6,4 +6,5 @@ public interface IItem
     string Name { get; }
     string Description { get; }
     public int Handness {get; }
+    public bool IsWeapon { get; }
 }

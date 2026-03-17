@@ -28,4 +28,6 @@ public class Torch: IItem
     public  string Description { get; } = "The name explains everything.";
 
     public int Handness { get; } = 1;
+    public bool IsWeapon { get; } =  false;
+
 }

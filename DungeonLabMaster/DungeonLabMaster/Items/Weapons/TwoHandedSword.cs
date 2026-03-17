@@ -14,6 +14,8 @@ public class TwoHandedSword : IWeapon, IItem
     public string Name { get; }
     public string Description { get; }
     public char ItemMapName { get; } = 'S';
+    public bool IsWeapon { get; } =  true;
+
 
     public TwoHandedSword(int damage = 50, int defense = 2, string name = "Two Handed Sword", string description = "Heavy, slow, but oh god, thats a sword.")
     {
@@ -22,14 +24,5 @@ public class TwoHandedSword : IWeapon, IItem
         Name = name;
         Description = description;
     }
-
-    public void AddToInventoryFomGround(IItem item)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IItem RemoveFromInventory()
-    {
-        throw new NotImplementedException();
-    }
+    
 }
