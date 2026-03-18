@@ -157,13 +157,13 @@ public class Map
                       "----------------------------------------\n");
     }
 
-    public void QueryItemRemova()
+    public bool QueryItemRemova()
     {
         if (_player.NumberOfItemsInEquipment == 0)
         {
             Console.WriteLine("not enough items");
             Thread.Sleep(1000);
-            return;
+            return false;
         }
         
         int y = _player.PosY;
@@ -171,7 +171,7 @@ public class Map
         if (!_DungeonMap[y, x].IsEmpty)
         {
             Console.WriteLine("Field is not empty");
-            return;
+            return false;
         }
         Console.WriteLine("Print number of item to be removed");
         int itemNumber;
@@ -184,6 +184,8 @@ public class Map
         {
             _DungeonMap[y, x].PutItemHere(item);
         }
+
+        return true;
 
     }
 
