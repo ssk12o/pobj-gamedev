@@ -38,25 +38,25 @@ public class MainGame
         
         void EventLoop()
         {
-            IGameCommandCoR GCOmmand_INV_INPUT = new GameCommandInvalidInput();
-            IGameCommandCoR GCommand_WSAD = new GameCommandWSAD();
-            IGameCommandCoR GCommand_EXIT = new GameCommandExitCall();
-            IGameCommandCoR GCommand_HELP = new GameCommandHelp();
-            IGameCommandCoR GCommand_INV = new GameCommandInventoryRemoval();
-            IGameCommandCoR Gcommand_EQUIP = new GameCommandEquip();
+            IGameCommandCoR lGCommand_INV_INPUT = new GameCommandInvalidInput();
+            IGameCommandCoR lGCommand_WSAD = new GameCommandWSAD();
+            IGameCommandCoR lGCommand_EXIT = new GameCommandExitCall();
+            IGameCommandCoR lGCommand_HELP = new GameCommandHelp();
+            IGameCommandCoR lGCommand_INV = new GameCommandInventoryRemoval();
+            IGameCommandCoR lGcommand_EQUIP = new GameCommandEquip();
             
-            GCOmmand_INV_INPUT.SetNext(GCommand_WSAD);
-            GCommand_WSAD.SetNext(GCommand_EXIT);
-            GCommand_EXIT.SetNext(GCommand_HELP);
-            GCommand_HELP.SetNext(GCommand_INV);
-            GCommand_INV.SetNext(Gcommand_EQUIP);
+            lGCommand_INV_INPUT.SetNext(lGCommand_WSAD);
+            lGCommand_WSAD.SetNext(lGCommand_EXIT);
+            lGCommand_EXIT.SetNext(lGCommand_HELP);
+            lGCommand_HELP.SetNext(lGCommand_INV);
+            lGCommand_INV.SetNext(lGcommand_EQUIP);
             
             bool keepRunning = true;
             while (keepRunning)
             {
                 mapa.PrintRound();
                 ConsoleKey pressedKey = Console.ReadKey(true).Key;
-                GCommand_WSAD.HandleEvent(pressedKey, mapa, ref keepRunning);
+                lGCommand_WSAD.HandleEvent(pressedKey, mapa, ref keepRunning);
             }
         }
 
