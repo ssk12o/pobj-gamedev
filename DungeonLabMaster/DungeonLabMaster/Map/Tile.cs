@@ -17,6 +17,12 @@ public struct Tile
         IsEmpty = true;
     }
 
+    public string? getTopItemName()
+    {
+        if (Item == null) return null;
+        return Item.Name;
+    }
+
     public bool PutItemHere(IItem item)
     {
         if (!IsEmpty || !NotAWallOrATrap) return false;
@@ -52,6 +58,23 @@ public struct Tile
         PrintValue = '.';
         IsEmpty = true;
         return tmp;
+    }
+    
+
+    public void BuilderSetWallHere()
+    {
+        IsEmpty = true;
+        NotAWallOrATrap = false;
+        PrintValue = '#';
+        Item = null;
+    }
+
+    public void BuilderSetEmptyHere()
+    {
+        IsEmpty = true;
+        NotAWallOrATrap = false;
+        PrintValue = '.';
+        Item = null;
     }
 }
 

@@ -33,6 +33,8 @@ public class Map
         _player = new Player();
     }
 
+    // ========================================================================
+
     private bool CheckIfPositionIsOnMap(int y, int x)
     {
         return x >= 0 && x < _width && y >= 0 && y < _height;
@@ -80,6 +82,30 @@ public class Map
         DrawWallStrightLIneToDungeonMap(x2, y1, x2, y2);
         return true;
     }
+
+    public bool DrawRoomToDungeonMap(int y1, int x1, int y2, int x2)
+    {
+        if(!CheckIfPositionIsOnMap(y1, x1)) return false;
+        if(!CheckIfPositionIsOnMap(y2, x2)) return false;
+        
+        if (x1 > x2)
+        {
+            (x1, x2) = (x2, x1);
+        }
+        if (y1 > y2)
+        {
+            (y1, y2) = (y2, y1);
+        }
+
+        for (int y = y1; y <= y2; y++)
+        {
+            for (int x = x1; x <= x2; x++)
+            {
+                _DungeonMap[y, x].RemoveWallHere();
+            }
+        }
+        return true;
+    }
     
     public bool DrawRemoveWallTileFromMap(int y, int x)
     {
@@ -108,7 +134,7 @@ public class Map
         return false;
     }
 
-
+    // ========================================================================
     private StringBuilder GenerateMapSb()
     {
         StringBuilder sb = new StringBuilder();
@@ -136,8 +162,8 @@ public class Map
         }
         else
         {
-            name = _DungeonMap[_player.PosY, _player.PosX].Item.Name;
-            ch = _DungeonMap[_player.PosY, _player.PosX].Item.ItemMapName;
+            name = _DungeonMap[_player.PosY, _player.PosX].getTopItemName();
+            ch = _DungeonMap[_player.PosY, _player.PosX].PrintValue;
         }
         StringBuilder sb = new StringBuilder();
         sb.Append("[").Append(ch).Append("] ").Append(name);
@@ -157,7 +183,7 @@ public class Map
                       "----------------------------------------\n");
     }
 
-    public bool QueryItemRemova()
+    public bool QueryItemRemoval()
     {
         if (_player.NumberOfItemsInEquipment == 0)
         {
@@ -186,7 +212,6 @@ public class Map
         }
 
         return true;
-
     }
 
     public void PrintRound()
@@ -202,8 +227,7 @@ public class Map
     {
         int y = _player.PosY;
         int x = _player.PosX;
-
-
+        
         if(_DungeonMap[y, x].IsEmpty) return false;
         IItem? pickedUp = _DungeonMap[y, x].RemoveItemFromHere();
         

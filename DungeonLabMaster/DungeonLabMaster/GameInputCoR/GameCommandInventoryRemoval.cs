@@ -7,7 +7,7 @@ public class GameCommandInventoryRemoval: GameCommandCoRBase
         bool doneSth = false;
         if (pressedKey == ConsoleKey.I)
         {
-            mapa.QueryItemRemova();
+            mapa.QueryItemRemoval();
             doneSth = true;
         }
         return doneSth | base.HandleEvent(pressedKey, mapa, ref keepRunning); 
