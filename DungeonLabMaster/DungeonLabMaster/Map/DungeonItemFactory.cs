@@ -1,21 +1,65 @@
 using DungeonLabMaster.Items;
+using DungeonLabMaster.Map.FactoryDep;
 
 namespace DungeonLabMaster.Map;
 
 public class DungeonItemFactory
 {
+    private OneHandedSwordFactory _facOneHandedSword = new OneHandedSwordFactory();
+    private TwoHandedSwordFactory _facTwoHandedSword = new TwoHandedSwordFactory();
+    private BucklerFactory _facBuckler = new BucklerFactory();
+    private RockFactory _facRock = new RockFactory();
+    private BigRockFactory _facBigRock = new BigRockFactory();
+    private CurrencyFactory _facCurrency = new CurrencyFactory();
     public IItem CreateNewRandomItemOrdinary()
     {
-        throw new NotImplementedException();
+        IItem created;
+        switch (Random.Shared.Next(0, 3))
+        {
+            case 0:
+            case 1:
+                created = CreateNewRandomItemOrdinary();
+                break;
+            default:
+                created = CreateNewRandomWeapon();
+                break;
+        }
+        return created;
     }
 
     public IItem CreateNewRandomWeapon()
     {
-        throw new NotImplementedException();
+        IItem created;
+        switch (Random.Shared.Next(0, 3))
+        {
+            case 0:
+                created =  _facOneHandedSword.Create();
+                break;
+            case 1:
+                created = _facTwoHandedSword.Create();
+            break;
+            default:
+                created =  _facBuckler.Create();
+            break;
+        }
+        return created;
     }
     
     public IItem CreateNewRandomItem()
     {
-        throw new NotImplementedException();
+        IItem created;
+        switch (Random.Shared.Next(0, 3))
+        {
+            case 0:
+                created =     _facRock.Create();
+                break;
+            case 1:
+                created = _facBigRock.Create(); 
+                break;
+            default:
+                created = _facCurrency.Create();
+                    break;
+        }
+        return created;
     }
 }

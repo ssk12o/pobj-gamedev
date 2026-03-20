@@ -46,8 +46,7 @@ public struct Tile
     
     public IItem? RemoveItemFromHere()
     {
-        // wiem ze nie wolno kozystac z is, ale to nie pelni tu zadnej roli i jest tylko po to by uciszcyc warniig
-        if (IsEmpty || Item is null) return null;
+        if (IsEmpty) return null;
         IItem tmp = Item;
         Item = null;
         PrintValue = '.';

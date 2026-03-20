@@ -7,13 +7,15 @@ namespace DungeonLabMaster.Map.FactoryDep;
 
 public class OneHandedSwordFactory
 {
+    private int minAttack = 12;
     private int maxAttack = 30;
+    private int minDefense = 12;
     private int maxDefense = 20;
 
     public IItem Create()
     {
         int index = Random.Shared.Next(OneHandedSwordsNames.Length);
-        return new OneHandedSword(Random.Shared.Next(maxAttack), Random.Shared.Next(maxDefense),
+        return new OneHandedSword(Random.Shared.Next(minAttack, maxAttack+1), Random.Shared.Next(minDefense, maxDefense),
             OneHandedSwordsNames[index], OneHandedSwordsDescriptions[index]);
     }
     // ai generated
