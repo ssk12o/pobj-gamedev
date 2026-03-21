@@ -173,13 +173,26 @@ public class Player: IPlayerEnt
     public StringBuilder GetInventoryListSb()
     {
         int i = 0;
+        StringBuilder sb = new StringBuilder();
+        foreach (IItem item in _inventory)
+        {
+            sb.Append($"[{i++}] \t- {item.ItemMapName} - ");
+            if (item.IsWeapon)
+            {
+                IWeapon wep = (IWeapon)item;
+                sb.Append($"[Attack: {wep.Damage}, Defense: {wep.Defense} \t- ");
+            }
+
+            sb.Append($"{item.Name} \t\t - {item.Description}\n");
+        }
+        return sb;
+    }
+
+    public StringBuilder GetValuables()
+    {
         StringBuilder sb = new();
         sb.AppendLine($"Amount of Gold {GoldCount}");
         sb.AppendLine($"Amount of Coin {CoinCount}");
-        foreach (IItem item in _inventory)
-        {
-            sb.Append((i++).ToString()).Append($"\t{item.ItemMapName} - ").Append(item.Name).AppendLine();
-        }
         return sb;
     }
 
@@ -187,6 +200,9 @@ public class Player: IPlayerEnt
     {
         StringBuilder sb = new();
         sb.Append("----------------------------------------\nEquipment:\n----------------------------------------\n");
+        sb.Append(GetValuables());
+        sb.Append("----------------------------------------\n");
+        
         foreach (IItem item in _inventory)
         {
             sb.Append(item.Name).Append(" \t- ").Append(item.Description).AppendLine();

@@ -10,6 +10,7 @@ public class Map
     private int _height, _width;
     private Tile[,] _DungeonMap;
     // private List<IPlayerEnt>  _playerEnts;
+    public List<string> _helpTextList;
     private Player _player;
 
     public bool TryMoveMainPlayer(int y, int x)
@@ -31,6 +32,14 @@ public class Map
             }
         }
         _player = new Player();
+    }
+    public Map(int height, int width, Tile[,] generatedDungeonMap, Player player,  List<string> helpTextList)
+    {
+        _width = width;
+        _height = height;
+        _DungeonMap = generatedDungeonMap;
+        _player = player;
+        _helpTextList = helpTextList;
     }
 
     // ========================================================================
@@ -55,17 +64,43 @@ public class Map
         if (!CheckIfTileIsReachable(y, x)) return false;
         return _DungeonMap[y, x].PutItemHere(item);
     }
+    public bool RemoveWallTileFromMap(int y, int x)
+    {
+        if(!CheckIfPositionIsOnMap(y, x)) return false;
+        return _DungeonMap[y, x].RemoveWallHere();
+    }
 
     public bool AddWallToMap(int y, int x)
     {
-        if(!CheckIfTileIsEmpty(y, x)) return false;
+        if(!CheckIfPositionIsOnMap(y, x) || !CheckIfTileIsEmpty(y, x)) return false;
         return _DungeonMap[y, x].PutWallHere();
+    }
+    public bool DrawWallStraightLineToDungeonMap(int x1, int y1, int x2, int y2)
+    {
+        if(!CheckIfPositionIsOnMap(y1, x1) && !CheckIfPositionIsOnMap(y2, x2)) return false;
+        if (x1 == x2)
+        {
+            for (int y = y1; y <= y2; y++)
+            {
+                AddWallToMap(y,  x1);
+            }
+            return true;
+        } 
+        else if (y1 == y2)
+        {
+            for (int x = x1; x <= x2; x++)
+            {
+                AddWallToMap(y1, x);
+            }
+            return true;
+        }
+        return false;
     }
 
     public bool DrawWallSquareToDungeonMap(int y1, int x1, int y2, int x2)
     {
-        if(!CheckIfPositionIsOnMap(y1, x1)) return false;
-        if(!CheckIfPositionIsOnMap(y2, x2)) return false;
+        // if(!CheckIfPositionIsOnMap(y1, x1)) return false;
+        // if(!CheckIfPositionIsOnMap(y2, x2)) return false;
         
         if (x1 > x2)
         {
@@ -76,17 +111,17 @@ public class Map
             (y1, y2) = (y2, y1);
         }
         
-        DrawWallStrightLIneToDungeonMap(x1, y1, x2, y1);
-        DrawWallStrightLIneToDungeonMap(x1, y2, x2, y2);
-        DrawWallStrightLIneToDungeonMap(x1, y1, x1, y2);
-        DrawWallStrightLIneToDungeonMap(x2, y1, x2, y2);
+        DrawWallStraightLineToDungeonMap(x1, y1, x2, y1);
+        DrawWallStraightLineToDungeonMap(x1, y2, x2, y2);
+        DrawWallStraightLineToDungeonMap(x1, y1, x1, y2);
+        DrawWallStraightLineToDungeonMap(x2, y1, x2, y2);
         return true;
     }
 
     public bool DrawRoomToDungeonMap(int y1, int x1, int y2, int x2)
     {
-        if(!CheckIfPositionIsOnMap(y1, x1)) return false;
-        if(!CheckIfPositionIsOnMap(y2, x2)) return false;
+        // if(!CheckIfPositionIsOnMap(y1, x1)) return false;
+        // if(!CheckIfPositionIsOnMap(y2, x2)) return false;
         
         if (x1 > x2)
         {
@@ -106,33 +141,20 @@ public class Map
         }
         return true;
     }
-    
-    public bool DrawRemoveWallTileFromMap(int y, int x)
-    {
-        if(!CheckIfPositionIsOnMap(y, x)) return false;
-        return _DungeonMap[y, x].RemoveWallHere();
-    }
 
-    public bool DrawWallStrightLIneToDungeonMap(int x1, int y1, int x2, int y2)
+    public bool DrawEmptyRoomInMap(int y1, int x1, int y2, int x2)
     {
-        if(!CheckIfPositionIsOnMap(y1, x1) || !CheckIfPositionIsOnMap(y2, x2)) return false;
-        if (x1 == x2)
-        {
-            for (int y = y1; y <= y2; y++)
-            {
-                AddWallToMap(y,  x1);
-            }
-            return true;
-        } else if (y1 == y2)
+        for (int y = y1; y <= y2; y++)
         {
             for (int x = x1; x <= x2; x++)
             {
-                AddWallToMap(y1, x);
+                RemoveWallTileFromMap(y, x);
             }
-            return true;
         }
-        return false;
+
+        return true;
     }
+
 
     // ========================================================================
     private StringBuilder GenerateMapSb()
@@ -179,7 +201,8 @@ public class Map
                       "----------------------------------------\n" +
                       _player.GetStats().ToString() + 
                       "----------------------------------------\n" +
-                      _player.GetInventoryListSb().ToString() +
+                      _player.GetValuables().ToString() + 
+                      // _player.GetInventoryListSb().ToString() +
                       "----------------------------------------\n");
     }
 
@@ -231,7 +254,7 @@ public class Map
         if(_DungeonMap[y, x].IsEmpty) return false;
         IItem? pickedUp = _DungeonMap[y, x].RemoveItemFromHere();
         
-        Console.WriteLine("Put in inventory or try wieldind it? E or W");
+        Console.WriteLine("Put in inventory or try wielding it? E or W");
         bool spin = true;
         while (spin)
         {

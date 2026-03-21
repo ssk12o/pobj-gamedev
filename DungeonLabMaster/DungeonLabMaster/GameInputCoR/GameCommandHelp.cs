@@ -24,12 +24,18 @@ public class GameCommandHelp: GameCommandCoRBase
 
         void PrintMenuOptions()
         {
-            Console.Write("Welcome in help menu. Options:\n" +
-                          "\t - WSAD to move\n" +
-                          "\t - E to equip item (if possible) or print items in inventory\n" +
-                          "\t - I to remove item from equipment\n" +
-                          "\t - Backspace to exit game\n" +
-                          "\t - H to enter this menu\n");
+            
+            Console.Write("Welcome in help menu. Options:\n");
+            foreach (string msg in mapa._helpTextList)
+            {
+                Console.WriteLine(msg);
+            }
+            // Console.Write("Welcome in help menu. Options:\n" +
+            //               "\t - WSAD to move\n" +
+            //               "\t - E to equip item (if possible) or print long items in inventory\n" +
+            //               "\t - I to remove item from equipment\n" +
+            //               "\t - Backspace to exit game\n" +
+            //               "\t - H to enter this menu\n");
         }
     }
 }

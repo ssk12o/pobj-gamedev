@@ -1,4 +1,5 @@
 using DungeonLabMaster.Items;
+using DungeonLabMaster.Items.Weapons;
 
 namespace DungeonLabMaster.Map.FactoryDep;
 
@@ -12,7 +13,7 @@ public class BucklerFactory
     public IItem Create()
     {
         int index = Random.Shared.Next(BucklerNames.Length);
-        return new TwoHandedSword(Random.Shared.Next(minAttack, maxAttack+1), Random.Shared.Next(minDefense,maxDefense),
+        return new Buckler(Random.Shared.Next(minAttack, maxAttack+1), Random.Shared.Next(minDefense,maxDefense),
             BucklerNames[index], BucklerDescriptions[index]);
     }
     
