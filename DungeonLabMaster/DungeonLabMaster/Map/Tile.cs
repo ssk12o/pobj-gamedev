@@ -17,7 +17,7 @@ public struct Tile
         IsEmpty = true;
     }
 
-    public string? getTopItemName()
+    public string? GetTopItemName()
     {
         if (Item == null) return null;
         return Item.Name;

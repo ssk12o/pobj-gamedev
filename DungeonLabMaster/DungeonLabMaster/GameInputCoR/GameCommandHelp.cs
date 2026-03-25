@@ -26,7 +26,7 @@ public class GameCommandHelp: GameCommandCoRBase
         {
             
             Console.Write("Welcome in help menu. Options:\n");
-            foreach (string msg in mapa._helpTextList)
+            foreach (string msg in mapa.HelpTextList)
             {
                 Console.WriteLine(msg);
             }

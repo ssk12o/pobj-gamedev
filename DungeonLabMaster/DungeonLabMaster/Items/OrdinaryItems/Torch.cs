@@ -2,24 +2,24 @@ namespace DungeonLabMaster.Items.Weapons.OrdinaryItems;
 
 public class Torch: IItem
 {
-    public bool burning { get; private set; }
-    public int amountOfOil { get; private set; }
+    public bool Burning { get; private set; }
+    public int AmountOfOil { get; private set; }
 
     public Torch(int amountOfOil)
     {
-        this.amountOfOil = amountOfOil;
-        burning = false;
+        this.AmountOfOil = amountOfOil;
+        Burning = false;
     }
 
-    async void burn()
+    async void Burn()
     {
-        burning = true;
-        while (amountOfOil > 0)
+        Burning = true;
+        while (AmountOfOil > 0)
         {
             await Task.Delay(10000);
-            amountOfOil--;
+            AmountOfOil--;
         }
-        burning = false;
+        Burning = false;
     }
 
     public char ItemMapName { get; private set; } = 't';

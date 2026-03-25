@@ -5,7 +5,7 @@ public interface IDungeonMapBuilder
     public Map GetMap();
     void BuildBaseMapEmpty();
     void BuildBaseMapFull();
-    public void setHelpInfo(List<string> helpTextList);
+    public void SetHelpInfo(List<string> helpTextList);
     void AddCorridors(int count);
     void AddRooms(int count);
     void AddCentralHall(int height, int width);

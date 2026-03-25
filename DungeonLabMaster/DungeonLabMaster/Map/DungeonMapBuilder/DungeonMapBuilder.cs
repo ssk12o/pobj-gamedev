@@ -5,20 +5,20 @@ namespace DungeonLabMaster.Map;
 
 public class DungeonMapBuilder: IDungeonMapBuilder
 {
-    bool valid = false;
+    private bool _valid = false;
     private int  _width, _height;
-    private Tile [,]? _DungeonMap;
-    private DungeonItemFactory _DungeonItemFactory;
+    private Tile [,]? _dungeonMap;
+    private DungeonItemFactory _dungeonItemFactory;
     private List<string> _helpTextList;
     public DungeonMapBuilder(int height = 20, int width = 40)
     {
         Console.WriteLine("DungeonMapBuilder -- starting up");
         _width = width;
         _height = height;
-        _DungeonItemFactory = new DungeonItemFactory();
+        _dungeonItemFactory = new DungeonItemFactory();
     }
 
-    private (int y, int x) getPositionOfRandomEmptyTile()
+    private (int y, int x) GetPositionOfRandomEmptyTile()
     {
         while (true)
         {
@@ -28,21 +28,21 @@ public class DungeonMapBuilder: IDungeonMapBuilder
         }
     }
 
-    public void setHelpInfo(List<string> helpTextList)
+    public void SetHelpInfo(List<string> helpTextList)
     {
         _helpTextList = helpTextList;
     }
     public Map GetMap()
     {
         TestIfMapIsValid();
-        _DungeonMap[0, 0].RemoveWallHere();
-        Map _FinalMap = new Map(_height, _width, _DungeonMap,  new Player(), _helpTextList);
-        return _FinalMap;
+        _dungeonMap[0, 0].RemoveWallHere();
+        Map finalMap = new Map(_height, _width, _dungeonMap,  new Player(), _helpTextList);
+        return finalMap;
     }
 
     private void TestIfMapIsValid()
     {
-        if (!valid)
+        if (!_valid)
         {
             throw new InvalidOperationException("Map must be first uninitialized");
         }
@@ -50,46 +50,46 @@ public class DungeonMapBuilder: IDungeonMapBuilder
 
     private void BuilderMapInicializer()
     {
-        _DungeonMap = new Tile[_height, _width];
+        _dungeonMap = new Tile[_height, _width];
         for (int y = 0; y < _height; y++)
         {
             for (int x = 0; x < _width; x++)
             {
-                _DungeonMap[y, x] = new Tile();
+                _dungeonMap[y, x] = new Tile();
             }
         }
     }
     
     public void BuildBaseMapEmpty()
     {
-        if(!valid) BuilderMapInicializer();
+        if(!_valid) BuilderMapInicializer();
         else
         {
             for (int y = 0; y < _height; y++)
             {
                 for (int x = 0; x < _width; x++)
                 {
-                    _DungeonMap[y, x].BuilderSetEmptyHere();
+                    _dungeonMap[y, x].BuilderSetEmptyHere();
                 }
             }
         }
         
-        valid = true;
+        _valid = true;
     }
 
     public void BuildBaseMapFull()
     {
-        if(!valid) BuilderMapInicializer();
+        if(!_valid) BuilderMapInicializer();
         
         for (int y = 0; y < _height; y++)
         {
             for (int x = 0; x < _width; x++)
             {
-                _DungeonMap[y, x].BuilderSetWallHere();
+                _dungeonMap[y, x].BuilderSetWallHere();
             }
         }
         
-        valid = true;
+        _valid = true;
     }
 
     public void AddCorridorsRand(int count)
@@ -193,7 +193,7 @@ public class DungeonMapBuilder: IDungeonMapBuilder
         TestIfMapIsValid();
         for (int i = 0; i < numberOfItems; i++)
         {
-            (int y, int x) = getPositionOfRandomEmptyTile();
+            (int y, int x) = GetPositionOfRandomEmptyTile();
             AddItemToMap(y, x, factory.CreateNewRandomItem());
         }
     }
@@ -203,7 +203,7 @@ public class DungeonMapBuilder: IDungeonMapBuilder
         TestIfMapIsValid();
         for (int i = 0; i < numberOfWeapons; i++)
         {
-            (int y, int x) = getPositionOfRandomEmptyTile();
+            (int y, int x) = GetPositionOfRandomEmptyTile();
             AddItemToMap(y, x, factory.CreateNewRandomWeapon());
         }
     }
@@ -219,29 +219,29 @@ public class DungeonMapBuilder: IDungeonMapBuilder
 
     private bool CheckIfTileIsReachable(int y, int x)
     {
-        return CheckIfPositionIsOnMap(y, x) && _DungeonMap[y, x].NotAWallOrATrap;
+        return CheckIfPositionIsOnMap(y, x) && _dungeonMap[y, x].NotAWallOrATrap;
     }
 
     private bool CheckIfTileIsEmpty(int y, int x)
     {
-        return _DungeonMap[y, x].IsEmpty;
+        return _dungeonMap[y, x].IsEmpty;
     }
     
     public bool AddItemToMap(int y, int x, IItem item)
     {  
         if (!CheckIfTileIsReachable(y, x)) return false;
-        return _DungeonMap[y, x].PutItemHere(item);
+        return _dungeonMap[y, x].PutItemHere(item);
     }
     public bool RemoveWallTileFromMap(int y, int x)
     {
         if(!CheckIfPositionIsOnMap(y, x)) return false;
-        return _DungeonMap[y, x].RemoveWallHere();
+        return _dungeonMap[y, x].RemoveWallHere();
     }
 
     public bool AddWallToMap(int y, int x)
     {
         if(!CheckIfPositionIsOnMap(y, x) || !CheckIfTileIsEmpty(y, x)) return false;
-        return _DungeonMap[y, x].PutWallHere();
+        return _dungeonMap[y, x].PutWallHere();
     }
     public bool DrawWallStraightLineToDungeonMap(int x1, int y1, int x2, int y2)
     {
@@ -304,7 +304,7 @@ public class DungeonMapBuilder: IDungeonMapBuilder
         {
             for (int x = x1; x <= x2; x++)
             {
-                _DungeonMap[y, x].RemoveWallHere();
+                _dungeonMap[y, x].RemoveWallHere();
             }
         }
         return true;

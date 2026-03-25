@@ -7,7 +7,7 @@ public class DungeonStrategyLab: IDungeonStrategy
         mapBuilder.BuildBaseMapFull();
         mapBuilder.AddCorridors(12);
         mapBuilder.AddRooms(5);
-        mapBuilder.setHelpInfo(GetHelpMessages());
+        mapBuilder.SetHelpInfo(GetHelpMessages());
     }
 
     public List<string> GetHelpMessages()

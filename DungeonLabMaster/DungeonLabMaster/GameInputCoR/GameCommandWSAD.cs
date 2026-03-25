@@ -1,6 +1,6 @@
 namespace DungeonLabMaster.GameInputCoR;
 
-public class GameCommandWSAD: GameCommandCoRBase
+public class GameCommandWsad: GameCommandCoRBase
 {
     public override bool HandleEvent(ConsoleKey pressedKey, Map.Map mapa, ref bool keepRunning)
     {

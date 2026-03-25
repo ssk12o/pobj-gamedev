@@ -27,15 +27,15 @@ public class MainGame
                 Console.WriteLine($"[{i}] - {automaticBuildingStrategies[i]}");
             }
             
-            int DungeonChoice;
-            while(!int.TryParse(Console.ReadLine(), out DungeonChoice)|| DungeonChoice < 0 || DungeonChoice > automaticBuildingStrategies.Count)
+            int dungeonChoice;
+            while(!int.TryParse(Console.ReadLine(), out dungeonChoice)|| dungeonChoice < 0 || dungeonChoice > automaticBuildingStrategies.Count)
             {
                 Console.WriteLine("Invalid option. try again.");
                 Thread.Sleep(1000);
             }
 
             IDungeonMapBuilder mapBuilder = new DungeonMapBuilder();
-            automaticBuildingStrategies[DungeonChoice].Construct(mapBuilder);
+            automaticBuildingStrategies[dungeonChoice].Construct(mapBuilder);
             
             
             Map.Map mapa = mapBuilder.GetMap();
@@ -73,25 +73,25 @@ public class MainGame
         
         void EventLoop(Map.Map mapa)
         {
-            IGameCommandCoR lGCommand_INV_INPUT = new GameCommandInvalidInput();
-            IGameCommandCoR lGCommand_WSAD = new GameCommandWSAD();
-            IGameCommandCoR lGCommand_EXIT = new GameCommandExitCall();
-            IGameCommandCoR lGCommand_HELP = new GameCommandHelp();
-            IGameCommandCoR lGCommand_INV = new GameCommandInventoryRemoval();
-            IGameCommandCoR lGcommand_EQUIP = new GameCommandEquip();
+            IGameCommandCoR lGCommandInvInput = new GameCommandInvalidInput();
+            IGameCommandCoR lGCommandWsad = new GameCommandWsad();
+            IGameCommandCoR lGCommandExit = new GameCommandExitCall();
+            IGameCommandCoR lGCommandHelp = new GameCommandHelp();
+            IGameCommandCoR lGCommandInv = new GameCommandInventoryRemoval();
+            IGameCommandCoR lGcommandEquip = new GameCommandEquip();
             
-            lGCommand_INV_INPUT.SetNext(lGCommand_WSAD);
-            lGCommand_WSAD.SetNext(lGCommand_EXIT);
-            lGCommand_EXIT.SetNext(lGCommand_HELP);
-            lGCommand_HELP.SetNext(lGCommand_INV);
-            lGCommand_INV.SetNext(lGcommand_EQUIP);
+            lGCommandInvInput.SetNext(lGCommandWsad);
+            lGCommandWsad.SetNext(lGCommandExit);
+            lGCommandExit.SetNext(lGCommandHelp);
+            lGCommandHelp.SetNext(lGCommandInv);
+            lGCommandInv.SetNext(lGcommandEquip);
             
             bool keepRunning = true;
             while (keepRunning)
             {
                 mapa.PrintRound();
                 ConsoleKey pressedKey = Console.ReadKey(true).Key;
-                lGCommand_WSAD.HandleEvent(pressedKey, mapa, ref keepRunning);
+                lGCommandWsad.HandleEvent(pressedKey, mapa, ref keepRunning);
             }
         }
 

@@ -4,15 +4,15 @@ namespace DungeonLabMaster.Map.FactoryDep;
 
 public class TwoHandedSwordFactory
 {
-    private int minAttack = 12;
-    private int maxAttack = 30;
-    private int minDefense = 12;
-    private int maxDefense = 20;
+    private int _minAttack = 12;
+    private int _maxAttack = 30;
+    private int _minDefense = 12;
+    private int _maxDefense = 20;
 
     public IItem Create()
     {
         int index = Random.Shared.Next(TwoHandedSwordsNames.Length);
-        return new TwoHandedSword(Random.Shared.Next(minAttack, maxAttack + 1), Random.Shared.Next(minDefense, maxDefense + 1),
+        return new TwoHandedSword(Random.Shared.Next(_minAttack, _maxAttack + 1), Random.Shared.Next(_minDefense, _maxDefense + 1),
             TwoHandedSwordsNames[index], TwoHandedSwordsDescriptions[index]);
     }
     // ai generated

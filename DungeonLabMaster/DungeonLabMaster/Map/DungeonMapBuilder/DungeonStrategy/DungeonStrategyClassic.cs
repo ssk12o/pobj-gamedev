@@ -10,7 +10,7 @@ public class DungeonStrategyClassic: IDungeonStrategy
         mapBuilder.AddCentralHall(12, 12);
         mapBuilder.AddWeapon(5, new DungeonItemFactory());
         mapBuilder.AddItems(12, new DungeonItemFactory());
-        mapBuilder.setHelpInfo(GetHelpMessages());
+        mapBuilder.SetHelpInfo(GetHelpMessages());
     }
 
     public   List<string> GetHelpMessages()

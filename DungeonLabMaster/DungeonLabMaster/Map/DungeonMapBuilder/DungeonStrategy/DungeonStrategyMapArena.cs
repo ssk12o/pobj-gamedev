@@ -5,7 +5,7 @@ public class DungeonStrategyMapArena:IDungeonStrategy
     public void Construct(IDungeonMapBuilder mapBuilder)
     {
         mapBuilder.BuildBaseMapEmpty();
-        mapBuilder.setHelpInfo(GetHelpMessages());
+        mapBuilder.SetHelpInfo(GetHelpMessages());
     }
 
     public List<string> GetHelpMessages()
