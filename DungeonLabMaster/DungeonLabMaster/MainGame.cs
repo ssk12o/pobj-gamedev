@@ -10,66 +10,30 @@ public class MainGame
 {
     public static void RunGame()
     {
-        bool newLoadingMode = true;
-        if (newLoadingMode)
+        List<IDungeonStrategy> automaticBuildingStrategies = new List<IDungeonStrategy>
         {
-            List<IDungeonStrategy> automaticBuildingStrategies = new List<IDungeonStrategy>
-            {
-                new DungeonStrategyManual(),
-                new DungeonStrategyClassic(),
-                new DungeonStrategyLab(),
-                new DungeonStrategyMapArena()
-            };
-            Console.WriteLine("Preparing the game...");
-            Console.WriteLine("Choose a way to build dungeon:");
-            for(int i = 0; i < automaticBuildingStrategies.Count; i++)
-            {
-                Console.WriteLine($"[{i}] - {automaticBuildingStrategies[i]}");
-            }
-            
-            int dungeonChoice;
-            while(!int.TryParse(Console.ReadLine(), out dungeonChoice)|| dungeonChoice < 0 || dungeonChoice > automaticBuildingStrategies.Count)
-            {
-                Console.WriteLine("Invalid option. try again.");
-                Thread.Sleep(1000);
-            }
-
-            IDungeonMapBuilder mapBuilder = new DungeonMapBuilder();
-            automaticBuildingStrategies[dungeonChoice].Construct(mapBuilder);
-            
-            
-            Map.Map mapa = mapBuilder.GetMap();
-            WelcomeMessage();
-            EventLoop(mapa);
-        }
-        else
+            new DungeonStrategyManual(), new DungeonStrategyClassic(), new DungeonStrategyLab(), new DungeonStrategyMapArena()
+        };
+        Console.WriteLine("Preparing the game...");
+        Console.WriteLine("Choose a way to build dungeon:");
+        for(int i = 0; i < automaticBuildingStrategies.Count; i++)
         {
-            Map.Map mapa = new Map.Map(20, 40);
-                
-                    
-            mapa.AddItemToMap(3, 3, new Gold());
-            mapa.AddItemToMap(1, 3, new Coin());
-            mapa.AddWallToMap(19, 0);
-            mapa.DrawWallSquareToDungeonMap(3, 20, 6, 33);
-            mapa.DrawWallStraightLineToDungeonMap(1, 1, 13, 1);
-            mapa.DrawWallStraightLineToDungeonMap(4, 0, 4, 18);
-            mapa.DrawWallSquareToDungeonMap(15, 12, 19, 30);
-            mapa.DrawWallStraightLineToDungeonMap(7, 13, 38, 13);
-            mapa.RemoveWallTileFromMap(5, 33);
-            mapa.AddItemToMap(19, 35, new BigRock());
-            mapa.AddItemToMap(19, 34, new Rock());
-            mapa.AddItemToMap(19, 33, new Torch(20));
-            mapa.AddItemToMap(15, 15, new OneHandedSword());
-            mapa.AddItemToMap(5, 25, new TwoHandedSword());
-            mapa.AddItemToMap(4, 0, new Buckler());
-            mapa.AddItemToMap(7, 0, new OneHandedSword(name: "Dragon slayer"));
-            
-            
-            Thread.Sleep(1000);
-            WelcomeMessage();
-            EventLoop(mapa);
+            Console.WriteLine($"[{i}] - {automaticBuildingStrategies[i]}");
         }
         
+        int dungeonChoice;
+        while(!int.TryParse(Console.ReadLine(), out dungeonChoice)|| dungeonChoice < 0 || dungeonChoice > automaticBuildingStrategies.Count)
+        {
+            Console.WriteLine("Invalid option. try again.");
+            Thread.Sleep(1000);
+        }
+        IDungeonMapBuilder mapBuilder = new DungeonMapBuilder();
+        automaticBuildingStrategies[dungeonChoice].Construct(mapBuilder);
+        
+        
+        Map.Map mapa = mapBuilder.GetMap();
+        WelcomeMessage();
+        EventLoop(mapa);
         
         void EventLoop(Map.Map mapa)
         {
