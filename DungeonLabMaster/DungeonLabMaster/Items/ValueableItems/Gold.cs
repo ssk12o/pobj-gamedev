@@ -1,7 +1,13 @@
+using DungeonLabMaster.MovableEntities;
+
 namespace DungeonLabMaster.Items;
 
 public class Gold: IItem
 {
+    public int GetDamage(IPlayerEnt.PlayerStatsT playerStats)
+    {
+        return 0;
+    }
     public char ItemMapName { get; }
     public int Value { get; }
     public string Name { get; }

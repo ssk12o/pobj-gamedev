@@ -1,7 +1,13 @@
+using DungeonLabMaster.MovableEntities;
+
 namespace DungeonLabMaster.Items.Weapons.OrdinaryItems;
 
 public class Rock: IItem
 {
+    public int GetDamage(IPlayerEnt.PlayerStatsT playerStats)
+    {
+        return 0;
+    }
     public char ItemMapName { get; } = 'r';
     public string Name { get; } = "Rock";
     public string Description { get; } = "Just a rock. Not even shiny.";

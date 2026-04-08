@@ -1,12 +1,15 @@
+using DungeonLabMaster.MovableEntities;
+
 namespace DungeonLabMaster.Items.Weapons;
 
 
 public class Buckler : IWeapon, IItem
 {
-    public void Attack()
+    public int GetDamage(IPlayerEnt.PlayerStatsT playerStats)
     {
-        throw new NotImplementedException();
+        return Damage;
     }
+    
     public int Damage { get; }
     public int Defense { get; }
     public int Handness { get; } = 1;

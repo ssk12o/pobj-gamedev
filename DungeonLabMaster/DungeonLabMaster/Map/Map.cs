@@ -208,7 +208,7 @@ public class Map
 
     public bool QueryItemRemoval()
     {
-        if (_player.NumberOfItemsInEquipment == 0)
+        if (_player.NumberOfItemsInEquipment == 0 && _player.Hands[0] == null && _player.Hands[1] == null)
         {
             Console.WriteLine("Inventory is empty!");
             Thread.Sleep(1000);
@@ -222,7 +222,7 @@ public class Map
             Console.WriteLine("Field is not empty");
             return false;
         }
-        Console.WriteLine("Print number of item to be removed or backspace to back out");
+        Console.WriteLine("Print number of item to be removed, negative number to unhand item or backspace to back out");
         int itemNumber;
         ConsoleKeyInfo keyInfo;
         
@@ -236,7 +236,13 @@ public class Map
                 break;
             }
             Console.WriteLine("Invalid item number");
-        } 
+        }
+
+        if (itemNumber < 0)
+        {
+            _player.UnhandItem();
+            return true;
+        }
         IItem? item = _player.RemoveItemNoFromEquipment(itemNumber);
         if (item != null)
         {

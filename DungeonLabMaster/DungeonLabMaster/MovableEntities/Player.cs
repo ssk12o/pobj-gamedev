@@ -11,35 +11,27 @@ public class Player: IPlayerEnt
 
     public int PosX { get; set; }
     public int PosY { get; set; }
-    public PlayerStatsT PlayerStats = new PlayerStatsT();
+    
+    public IPlayerEnt.PlayerStatsT PlayerStats = new IPlayerEnt.PlayerStatsT();
     public int GoldCount { get; private set; } = 0;
     public int CoinCount { get; private set; } = 0;
 
-    public class PlayerStatsT
-    {
-        public int Strength { get; set; }
-        public int Agility { get; set; }
-        public int Intelligence { get; set; }
-        public int Health { get; set; }
-        public int MaxHealth { get; set; }
-        public int Luck { get; set; }
-        public int Aggresion { get; set; }
-    }
+
     
     private List<IItem> _inventory;
     public int NumberOfItemsInEquipment => _inventory.Count;
-    public IItem? RightHand { get; private set; }
-    public IItem? LeftHand { get; private set; }
-    private HandsUsability _hands = HandsUsability.NoneUsed;
+    public IItem[] Hands { get; set; } = new IItem[2];
 
-    private enum HandsUsability
-    {
-        NoneUsed,
-        LeftUsed,
-        RightUsed,
-        BothUsed,
-        TwoHanded
-    };
+    // private HandsUsability _hands = HandsUsability.NoneUsed;
+    //
+    // private enum HandsUsability
+    // {
+    //     NoneUsed,
+    //     LeftUsed,
+    //     RightUsed,
+    //     BothUsed,
+    //     TwoHanded
+    // };
 
     public Player(int health = 100, int posY = 0, int posX = 0, string name = "Player",
         char mapChar = 'P', List<IItem>? startingInventory = null)
@@ -69,86 +61,67 @@ public class Player: IPlayerEnt
     }
     public void HandItem(IItem item)
     {
-        if (item.Handness == 2)
+        int itemNewIndex = -1;
+        Console.WriteLine("Chose which hand is to wield this item. R or L or Backspace");
+        bool spin = true;
+        while (spin)
         {
-            IItem old;
-            switch (_hands)
+            ConsoleKey key = Console.ReadKey(true).Key;
+            switch (key)
             {
-                case HandsUsability.LeftUsed:
-                    old = LeftHand;
-                    AddItemToEquipment(old);
-                    LeftHand = null;
+                case ConsoleKey.R:
+                    itemNewIndex = 0;
+                    spin = false;
                     break;
-                
-                case HandsUsability.RightUsed or HandsUsability.TwoHanded:
-                    old = RightHand;
-                    AddItemToEquipment(old);
+                case ConsoleKey.L:
+                    itemNewIndex = 1;
+                    spin = false;
                     break;
-
-                case HandsUsability.BothUsed:
-                    old = LeftHand;
-                    AddItemToEquipment(old);
-                    LeftHand = null;
-                    old = RightHand;
-                    AddItemToEquipment(old);
-                    break;
+                case ConsoleKey.Backspace:
+                    return;
             }
-
-            _hands = HandsUsability.TwoHanded;
-            RightHand = item;
-            
         }
-        else
+        
+        switch (item.Handness)
         {
-            switch (_hands)
+            case 2:
+                AddItemToEquipment(Hands[0]);
+                AddItemToEquipment(Hands[1]);
+                Hands[itemNewIndex] = item;
+                Hands[1 -  itemNewIndex] = null;
+                break;
+            case 1:
+                AddItemToEquipment(Hands[itemNewIndex]);
+                Hands[itemNewIndex] = item;
+                break;
+        }
+    }
+    public void UnhandItem()
+    {
+        Console.WriteLine("Chose which hand is to be emptied: R or L or Backspace");
+        bool spin = true;
+        while (spin)
+        {
+            ConsoleKey key = Console.ReadKey(true).Key;
+            switch (key)
             {
-                case HandsUsability.LeftUsed:
-                    RightHand = item;
-                    _hands = HandsUsability.BothUsed;
-                    break;
-                case HandsUsability.RightUsed:
-                    LeftHand = item;
-                    _hands = HandsUsability.BothUsed;
-                    break;
-                case HandsUsability.NoneUsed:
-                    RightHand = item;
-                    _hands = HandsUsability.RightUsed;
-                    break;
-                case HandsUsability.BothUsed:
-                    Console.WriteLine("Chose which hand needs to be emptied. R or L");
-                    bool spin = true;
-                    while (spin)
-                    {
-                        ConsoleKey key = Console.ReadKey(true).Key;
-                        switch (key)
-                        {
-                            case ConsoleKey.R:
-                                IItem oldH = RightHand;
-                                RightHand = item;
-                                AddItemToEquipment(oldH);
-                                spin = false;
-                                break;
-                            case ConsoleKey.L:
-                                IItem oldHl = LeftHand;
-                                LeftHand = item;
-                                AddItemToEquipment(oldHl);
-                                spin = false;
-                                break;
-                        }
-                    }
-                    break;
-
-                case HandsUsability.TwoHanded:
-                    IItem old = RightHand;
-                    AddItemToEquipment(old);
-                    RightHand = item;
-                    break;
+                case ConsoleKey.R:
+                    AddItemToEquipment(Hands[0]);
+                    Hands[0] = null;
+                    return;
+                case ConsoleKey.L:
+                    AddItemToEquipment(Hands[1]);
+                    Hands[1] = null;
+                    return;
+                case ConsoleKey.Backspace:
+                    return;
             }
         }
     }
 
-    public void AddItemToEquipment(IItem item)
+    public void AddItemToEquipment(IItem? item)
     {
+        if (item == null) return;
         if (item.Name == "Gold")
         {
             AddGold(1);
@@ -234,22 +207,21 @@ public class Player: IPlayerEnt
 
     public StringBuilder GetStats()
     {
-        // public int Strength { get; set; }
-        // public int Agility { get; set; }
-        // public int Intelligence { get; set; }
-        // public int Health { get; set; }
-        // public int MaxHealth { get; set; }
-        // public int Luck { get; set; }
-        // public int Aggresion { get; set; }
-        //     
+        IPlayerEnt.PlayerStatsT effstats = new IPlayerEnt.PlayerStatsT();
+        foreach (IItem item in Hands)
+        {
+            if(item == null) continue;
+            effstats = effstats + item.GetStatModifiers();
+        }
+
+        effstats = effstats + PlayerStats;
+         
         StringBuilder sb = new();
-        sb.AppendLine($"Strength: \t\t{PlayerStats.Strength}");
-        sb.AppendLine($"Agility: \t\t{PlayerStats.Agility}");
-        sb.AppendLine($"Intelligence: \t\t{PlayerStats.Intelligence}");
-        // sb.AppendLine($"Health: \t{PlayerStats.Health}");
-        // sb.AppendLine($"Max Health: \t{PlayerStats.MaxHealth}");
-        sb.AppendLine($"Luck: \t\t\t{PlayerStats.Luck}");
-        sb.AppendLine($"Aggresion: \t\t{PlayerStats.Aggresion}");
+        sb.AppendLine($"Strength: \t\t{effstats.Strength}");
+        sb.AppendLine($"Agility: \t\t{effstats.Agility}");
+        sb.AppendLine($"Intelligence: \t\t{effstats.Intelligence}");
+        sb.AppendLine($"Luck: \t\t\t{effstats.Luck}");
+        sb.AppendLine($"Aggresion: \t\t{effstats.Aggresion}");
         return sb;
     }
     
@@ -263,24 +235,17 @@ public class Player: IPlayerEnt
     public StringBuilder GetHandsContent()
     {
         StringBuilder sb = new();
-        switch (_hands)
+        foreach (IItem item in Hands)
         {
-            case HandsUsability.LeftUsed:
-                sb.AppendLine("In left hand i wield: " + LeftHand?.Name);
-                break;
-            case HandsUsability.RightUsed:
-                sb.AppendLine("In right hand i wield: " + RightHand?.Name);
-                break;
-            case HandsUsability.NoneUsed:
-                sb.AppendLine("Im goly i wesoly");
-                break;
-            case HandsUsability.BothUsed:
-                sb.AppendLine("I wield " + LeftHand?.Name  + " in my left hand and " + RightHand?.Name + " in my right hand.");
-                break;
-            case HandsUsability.TwoHanded:
-                sb.AppendLine("I wield two handed weapon " + RightHand?.Name ?? "error");
-                break;
+            if(item == null) continue;
+            if (item.Handness == 2)
+            {
+                return sb.AppendLine("I wield two handed weapon " + item.Name);
+            }
+            sb.AppendLine("I wield one handed weapon " +  item.Name);
         }
+
+        if (sb.Length <= 0) sb.AppendLine("I am empty handed");
         return sb;
     }
 }

@@ -1,7 +1,13 @@
+using DungeonLabMaster.MovableEntities;
+
 namespace DungeonLabMaster.Items.Weapons.OrdinaryItems;
 
 public class Torch: IItem
 {
+    public int GetDamage(IPlayerEnt.PlayerStatsT playerStats)
+    {
+        return 0;
+    }
     public bool Burning { get; private set; }
     public int AmountOfOil { get; private set; }
 

@@ -1,13 +1,15 @@
 using DungeonLabMaster.Items.Weapons;
+using DungeonLabMaster.MovableEntities;
 
 namespace DungeonLabMaster.Items;
 
 public class TwoHandedSword : IWeapon, IItem
 {
-    public void Attack()
+    public int GetDamage(IPlayerEnt.PlayerStatsT playerStats)
     {
-        throw new NotImplementedException();
+        return Damage;
     }
+
     public int Damage { get; }
     public int Defense { get; }
     public int Handness { get; } = 2;
