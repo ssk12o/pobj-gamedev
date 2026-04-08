@@ -1,0 +1,455 @@
+@startuml DungeonLabMaster
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam backgroundColor #FEFEFE
+skinparam class {
+    BackgroundColor #FEFEFE
+    BorderColor #2C3E50
+    FontColor #2C3E50
+}
+skinparam interface {
+    BackgroundColor #ECF0F1
+    BorderColor #3498DB
+    FontColor #2980B9
+}
+skinparam enum {
+    BackgroundColor #FEF9E7
+    BorderColor #F7DC6F
+    FontColor #7D6608
+}
+
+' ============================================================
+' CORE ENTITIES
+' ============================================================
+interface IAliveEntity {
+    + Name: string
+    + MapChar: char
+    + Playerstats: PlayerStatsT
+    + PosX: int
+    + PosY: int
+    + Move(y: int, x: int): bool
+    + TakeDamage(damage: int): int
+    + CalculateAttackDamage(vis: IWeaponVisitor): int
+    + CalculateDefense(vis: IWeaponVisitor, enemyWeapon: IWeapon): int
+}
+
+class PlayerStatsT {
+    + Strength: int
+    + Agility: int
+    + Intelligence: int
+    + Health: int
+    + MaxHealth: int
+    + Luck: int
+    + Aggression: int
+    + add(a: PlayerStatsT, b: PlayerStatsT): PlayerStatsT
+}
+
+
+class Player {
+    - _inventory: List<IItem>
+    + Name: string
+    + MapChar: char
+    + PosX: int
+    + PosY: int
+    + GoldCount: int
+    + CoinCount: int
+    + Playerstats: PlayerStatsT
+    + NumberOfItemsInEquipment: int
+    + Hands: IItem[2]
+    + AddCoin(amount: int): void
+    + AddGold(amount: int): void
+    + GetCoins(amount: int): int
+    + GetGold(amount: int): int
+    + HandItem(item: IItem): void
+    + UnhandItem(): void
+    + AddItemToEquipment(item: IItem): void
+    + RemoveItemNoFromEquipment(number: int): IItem
+    + getEffectiveStats(): PlayerStatsT
+    + GetHpSb(): StringBuilder
+    + GetStats(): StringBuilder
+    + GetInventoryContentsLongSb(): StringBuilder
+    + GetValuables(): StringBuilder
+    + GetHandsContent(): StringBuilder
+    + GetInventoryListSb(): StringBuilder
+}
+
+interface IEnemy {
+    + {abstract} weapon: IItem {protected set}
+    + {abstract} Armor: int
+}
+
+class Goblin {
+    + Attack: int
+    + Armor: int
+    + Name: string
+    + MapChar: char
+    + PosX: int
+    + PosY: int
+    + weapon: IItem
+    + Playerstats: PlayerStatsT
+}
+
+interface IEnemyFactory {
+    + {abstract} CreateEnemy(y: int, x: int): IAliveEntity
+}
+
+class GoblinFactory {
+    - _itemFactory: DungeonItemFactory
+    + CreateEnemy(y: int, x: int): IAliveEntity
+}
+
+class Combat {
+    - vis: IWeaponVisitor
+    - active: bool
+    - _enemy: IAliveEntity
+    - _player: Player
+    + arenaFight(): void
+    - PlayerAttack(player: Player, enemy: IAliveEntity): void
+    - EnemyAttack(player: Player, enemy: IAliveEntity): void
+    - GetVisitorFromAttackType(type: AttackType): IWeaponVisitor
+}
+
+enum AttackType {
+    Normal
+    Sneaky
+    Magical
+}
+
+' ============================================================
+' MAP SYSTEM
+' ============================================================
+class Map {
+    - _movementRound: int
+    - _height: int
+    - _width: int
+    - _dungeonMap: Tile[,]
+    - _enemies: List<IAliveEntity>
+    + HelpTextList: List<string>
+    - _player: Player
+    + playerIsAlive: bool
+    + TryMoveMainPlayer(y: int, x: int): bool
+    + PrintRound(): void
+    + PlayerTryPickUpItem(): bool
+    + PlayerPrintEquipmentLong(): void
+    + QueryItemRemoval(): bool
+}
+
+struct Tile {
+    - PrintValue: char
+    - Item: IItem
+    - NotAWallOrATrap: bool
+    - IsEmpty: bool
+    + GetTopItemName(): string
+    + PutItemHere(item: IItem): bool
+    + PutWallHere(): bool
+    + RemoveWallHere(): bool
+    + RemoveItemFromHere(): IItem
+}
+
+interface IDungeonMapBuilder {
+    + {abstract} GetMap(): Map
+    + {abstract} BuildBaseMapEmpty(): void
+    + {abstract} BuildBaseMapFull(): void
+    + {abstract} SetHelpInfo(helpTextList: List<string>): void
+    + {abstract} AddCorridors(count: int): void
+    + {abstract} AddRooms(count: int): void
+    + {abstract} AddCentralHall(height: int, width: int): void
+    + {abstract} AddItems(numberOfItems: int, factory: DungeonItemFactory): void
+    + {abstract} AddWeapon(numberOfWeapons: int, factory: DungeonItemFactory): void
+    + {abstract} AddEnemies(numberOfEnemies: int, factory: IEnemyFactory): void
+}
+
+class DungeonMapBuilder {
+    - _enemies: List<IAliveEntity>
+    - _enemyFactory: IEnemyFactory
+    - _valid: bool
+    - _width: int
+    - _height: int
+    - _dungeonMap: Tile[,]
+    - _dungeonItemFactory: DungeonItemFactory
+    - _helpTextList: List<string>
+    + GetMap(): Map
+    + BuildBaseMapEmpty(): void
+    + BuildBaseMapFull(): void
+    + AddCorridors(count: int): void
+    + AddCorridorsRand(count: int): void
+    + AddCorridorsL(count: int): void
+    + AddRooms(count: int): void
+    + AddCentralHall(height: int, width: int): void
+    + AddItems(numberOfItems: int, factory: DungeonItemFactory): void
+    + AddWeapon(numberOfWeapons: int, factory: DungeonItemFactory): void
+    + AddEnemies(numberOfEnemiesN: int, factory: IEnemyFactory): void
+    - AddCorridorL(y1: int, x1: int, y2: int, x2: int): void
+    - DrawEmptyRoomInMap(y1: int, x1: int, y2: int, x2: int): bool
+}
+
+interface IDungeonStrategy {
+    + {abstract} Construct(mapBuilder: IDungeonMapBuilder): void
+    + {abstract} GetDescription(): string
+    + {abstract} GetHelpMessages(): List<string>
+}
+
+interface IDungeonHelp {
+    + {abstract} GetHelpMessages(): List<string>
+}
+
+class DungeonStrategyClassic {
+    + Construct(mapBuilder: IDungeonMapBuilder): void
+    + GetHelpMessages(): List<string>
+    + GetDescription(): string
+}
+
+class DungeonStrategyLab {
+    + Construct(mapBuilder: IDungeonMapBuilder): void
+    + GetHelpMessages(): List<string>
+    + GetDescription(): string
+}
+
+class DungeonStrategyMapArena {
+    - _enemyFactory: IEnemyFactory
+    + Construct(mapBuilder: IDungeonMapBuilder): void
+    + GetHelpMessages(): List<string>
+    + GetDescription(): string
+}
+
+class DungeonStrategyManual {
+    + Construct(mapBuilder: IDungeonMapBuilder): void
+    + GetHelpMessages(): List<string>
+    + GetDescription(): string
+}
+
+' ============================================================
+' ITEM SYSTEM
+' ============================================================
+interface IItem {
+    + {abstract} ItemMapName: char
+    + {abstract} Name: string
+    + {abstract} Description: string
+    + {abstract} Handness: int
+    + {abstract} IsWeapon: bool
+    + {abstract} GetDamage(playerStats: PlayerStatsT): int
+    + {abstract} GetStatModifiers(): PlayerStatsT
+    + GetDefenseForNormalAttack(stats: PlayerStatsT): int
+    + GetDefenseForSneakyAttack(stats: PlayerStatsT): int
+    + GetDefenseForMagicalAttack(stats: PlayerStatsT): int
+}
+
+interface IWeapon {
+    + {abstract} Accept(visitor: IWeaponVisitor): int
+    + {abstract} GetDefense(visitor: IWeaponVisitor, stats: PlayerStatsT): int
+    + {abstract} GetCategoryOfWeapon(): string
+}
+
+abstract class ItemDecorator {
+    # wrappedItem: IItem
+    # {abstract} getModifierName(): string
+    # {abstract} getModifierStats(): PlayerStatsT
+    + ItemMapName: char
+    + Name: string
+    + Description: string
+    + Handness: int
+    + IsWeapon: bool
+    + GetDamage(playerStats: PlayerStatsT): int
+    + GetStatModifiers(): PlayerStatsT
+    + Accept(visitor: IWeaponVisitor): int
+    + GetDefense(visitor: IWeaponVisitor, stats: PlayerStatsT): int
+}
+
+class DecoratorStrong {
+    + GetDamage(playerStats: PlayerStatsT): int
+}
+
+class DecoratorUnlucky
+
+class HeavyWeapon {
+    + Damage: int
+    + Defense: int
+    + Handness: int = 2
+    + Name: string
+    + Description: string
+    + ItemMapName: char
+    + IsWeapon: bool = true
+    + GetDamage(playerStats: PlayerStatsT): int
+    + Accept(visitor: IWeaponVisitor): int
+    + GetCategoryOfWeapon(): string
+    + GetDefense(visitor: IWeaponVisitor, stats: PlayerStatsT): int
+}
+
+class LightWeapon {
+    + Damage: int
+    + Defense: int
+    + Handness: int = 1
+    + Name: string
+    + Description: string
+    + ItemMapName: char
+    + IsWeapon: bool = true
+    + GetDamage(playerStats: PlayerStatsT): int
+    + Accept(visitor: IWeaponVisitor): int
+    + GetCategoryOfWeapon(): string
+    + GetDefenseForNormalAttack(stats: PlayerStatsT): int
+    + GetDefenseForSneakyAttack(stats: PlayerStatsT): int
+    + GetDefenseForMagicAttack(stats: PlayerStatsT): int
+    + GetDefense(visitor: IWeaponVisitor, stats: PlayerStatsT): int
+}
+
+class MagicalWeapon {
+    + Damage: int
+    + Defense: int
+    + Handness: int = 1
+    + Name: string
+    + Description: string
+    + ItemMapName: char
+    + IsWeapon: bool = true
+    + GetDamage(playerStats: PlayerStatsT): int
+    + Accept(visitor: IWeaponVisitor): int
+    + GetCategoryOfWeapon(): string
+    + GetDefenseForNormalAttack(stats: PlayerStatsT): int
+    + GetDefenseForSneakyAttack(stats: PlayerStatsT): int
+    + GetDefenseForMagicAttack(stats: PlayerStatsT): int
+    + GetDefense(visitor: IWeaponVisitor, stats: PlayerStatsT): int
+}
+
+class OneHandedSword
+class TwoHandedSword
+class Buckler
+class MagicalStaff
+
+class Rock {
+    + Handness: int = 1
+    + IsWeapon: bool = false
+}
+
+class BigRock {
+    + Handness: int = 2
+    + IsWeapon: bool = false
+}
+
+class Coin {
+    + Value: int
+    + Handness: int = 1
+    + IsWeapon: bool = false
+}
+
+class Gold {
+    + Value: int
+    + Handness: int = 1
+    + IsWeapon: bool = false
+}
+
+' ============================================================
+' VISITOR PATTERN (WEAPON)
+' ============================================================
+interface IWeaponVisitor {
+    + {abstract} Visit(weapon: HeavyWeapon): int
+    + {abstract} Visit(weapon: LightWeapon): int
+    + {abstract} Visit(weapon: MagicalWeapon): int
+    + {abstract} Visit(item: IItem): int
+    + {abstract} CalculateDefense(weapon: HeavyWeapon, stats: PlayerStatsT): int
+    + {abstract} CalculateDefense(weapon: LightWeapon, stats: PlayerStatsT): int
+    + {abstract} CalculateDefense(weapon: MagicalWeapon, stats: PlayerStatsT): int
+    + {abstract} CalculateDefense(item: IItem, stats: PlayerStatsT): int
+}
+
+class NormalAttackVisitor
+class SneakyAttackVisitor
+class MagicalAttackVisitor
+
+' ============================================================
+' FACTORIES
+' ============================================================
+class DungeonItemFactory {
+    - _facOneHandedSword: OneHandedSwordFactory
+    - _facTwoHandedSword: TwoHandedSwordFactory
+    - _facBuckler: BucklerFactory
+    - _facRock: RockFactory
+    - _facBigRock: BigRockFactory
+    - _facCurrency: CurrencyFactory
+    + CreateNewRandomItemOrdinary(): IItem
+    + CreateNewRandomWeapon(): IItem
+    + CreateNewRandomItem(): IItem
+}
+
+interface IFactoryDep {
+    + {abstract} Create(): IItem
+}
+
+class OneHandedSwordFactory
+class TwoHandedSwordFactory
+class BucklerFactory
+class RockFactory
+class BigRockFactory
+class CurrencyFactory
+
+' ============================================================
+' RELATIONSHIPS
+' ============================================================
+IAliveEntity <|.. Player
+IAliveEntity <|.. Goblin
+IEnemy <|.. Goblin
+IEnemyFactory <|.. GoblinFactory
+
+IDungeonMapBuilder <|.. DungeonMapBuilder
+IDungeonStrategy <|.. DungeonStrategyClassic
+IDungeonStrategy <|.. DungeonStrategyLab
+IDungeonStrategy <|.. DungeonStrategyMapArena
+IDungeonStrategy <|.. DungeonStrategyManual
+IDungeonHelp <|.. IDungeonStrategy
+
+IItem <|.. ItemDecorator
+IItem <|.. HeavyWeapon
+IItem <|.. LightWeapon
+IItem <|.. MagicalWeapon
+IItem <|.. Rock
+IItem <|.. BigRock
+IItem <|.. Coin
+IItem <|.. Gold
+
+IWeapon <|.. HeavyWeapon
+IWeapon <|.. LightWeapon
+IWeapon <|.. MagicalWeapon
+IWeapon <|.. ItemDecorator
+
+ItemDecorator <|-- DecoratorStrong
+ItemDecorator <|-- DecoratorUnlucky
+
+LightWeapon <|-- OneHandedSword
+LightWeapon <|-- Buckler
+HeavyWeapon <|-- TwoHandedSword
+MagicalWeapon <|-- MagicalStaff
+
+IFactoryDep <|.. OneHandedSwordFactory
+IFactoryDep <|.. TwoHandedSwordFactory
+IFactoryDep <|.. BucklerFactory
+IFactoryDep <|.. RockFactory
+IFactoryDep <|.. BigRockFactory
+IFactoryDep <|.. CurrencyFactory
+
+IWeaponVisitor <|.. NormalAttackVisitor
+IWeaponVisitor <|.. SneakyAttackVisitor
+IWeaponVisitor <|.. MagicalAttackVisitor
+
+DungeonMapBuilder ..> IEnemyFactory : uses
+DungeonMapBuilder ..> DungeonItemFactory : uses
+
+Combat ..> IWeaponVisitor
+Combat ..> Player
+Combat ..> IAliveEntity
+
+Player ..> IItem
+Goblin ..> IItem
+
+Map ..> Tile
+Map ..> Player
+Map ..> IAliveEntity
+Map ..> Combat
+
+DungeonItemFactory ..> OneHandedSwordFactory
+DungeonItemFactory ..> TwoHandedSwordFactory
+DungeonItemFactory ..> BucklerFactory
+DungeonItemFactory ..> RockFactory
+DungeonItemFactory ..> BigRockFactory
+DungeonItemFactory ..> CurrencyFactory
+DungeonItemFactory ..> DecoratorStrong
+DungeonItemFactory ..> DecoratorUnlucky
+
+@enduml
