@@ -7,18 +7,22 @@ public class GameCommandWsad: GameCommandCoRBase
         bool doneSth = false;
         switch (pressedKey)
         {
+            case ConsoleKey.H:
             case ConsoleKey.A:
                 doneSth = true;
                 mapa.TryMoveMainPlayer(0, -1);
                 break;
+            case ConsoleKey.L:
             case ConsoleKey.D:
                 doneSth = true;
                 mapa.TryMoveMainPlayer(0, 1);
                 break;
+            case ConsoleKey.K:
             case ConsoleKey.W:
                 doneSth = true;
                 mapa.TryMoveMainPlayer(-1, 0);
                 break;
+            case ConsoleKey.J:
             case ConsoleKey.S:
                 doneSth = true;
                 mapa.TryMoveMainPlayer(1, 0);
