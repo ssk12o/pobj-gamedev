@@ -4,7 +4,7 @@ namespace DungeonLabMaster.Items.Weapons.OrdinaryItems;
 
 public class Rock: IItem
 {
-    public int GetDamage(IPlayerEnt.PlayerStatsT playerStats)
+    public int GetDamage(IAliveEntity.PlayerStatsT playerStats)
     {
         return 0;
     }

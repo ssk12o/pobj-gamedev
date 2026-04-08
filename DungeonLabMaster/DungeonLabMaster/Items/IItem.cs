@@ -1,3 +1,4 @@
+
 using DungeonLabMaster.MovableEntities;
 
 namespace DungeonLabMaster.Items;
@@ -9,6 +10,11 @@ public interface IItem
     string Description { get; }
     public int Handness {get; }
     public bool IsWeapon { get; }
-    public int GetDamage(IPlayerEnt.PlayerStatsT playerStats);
-    public IPlayerEnt.PlayerStatsT GetStatModifiers() => new IPlayerEnt.PlayerStatsT();
+    public int GetDamage(IAliveEntity.PlayerStatsT playerStats);
+    public IAliveEntity.PlayerStatsT GetStatModifiers() => new IAliveEntity.PlayerStatsT();
+    
+    
+    public int GetDefenseForNormalAttack(IAliveEntity.PlayerStatsT stats) => stats.Agility;
+    public int GetDefenseForSneakyAttack(IAliveEntity.PlayerStatsT stats) => 0;
+    public int GetDefenseForMagicalAttack(IAliveEntity.PlayerStatsT stats) => stats.Luck;
 }

@@ -4,7 +4,7 @@ namespace DungeonLabMaster.Items;
 
 public class Coin: IItem
 {
-    public int GetDamage(IPlayerEnt.PlayerStatsT playerStats)
+    public int GetDamage(IAliveEntity.PlayerStatsT playerStats)
     {
         return 0;
     }

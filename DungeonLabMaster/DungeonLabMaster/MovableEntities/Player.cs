@@ -4,39 +4,30 @@ using DungeonLabMaster.Items.Weapons;
 
 namespace DungeonLabMaster.MovableEntities;
 
-public class Player: IPlayerEnt
+public class Player: IAliveEntity
 {
-    public string Name { get; }
+    public string Name { get; } = "Gamer_you";
     public char MapChar { get; }
 
     public int PosX { get; set; }
     public int PosY { get; set; }
     
-    public IPlayerEnt.PlayerStatsT PlayerStats = new IPlayerEnt.PlayerStatsT();
     public int GoldCount { get; private set; } = 0;
     public int CoinCount { get; private set; } = 0;
+    public IAliveEntity.PlayerStatsT Playerstats { get; protected set; }
 
 
     
     private List<IItem> _inventory;
     public int NumberOfItemsInEquipment => _inventory.Count;
     public IItem[] Hands { get; set; } = new IItem[2];
-
-    // private HandsUsability _hands = HandsUsability.NoneUsed;
-    //
-    // private enum HandsUsability
-    // {
-    //     NoneUsed,
-    //     LeftUsed,
-    //     RightUsed,
-    //     BothUsed,
-    //     TwoHanded
-    // };
+    
 
     public Player(int health = 100, int posY = 0, int posX = 0, string name = "Player",
         char mapChar = 'P', List<IItem>? startingInventory = null)
     {
-        PlayerStats.Health = PlayerStats.MaxHealth = health;
+        Playerstats = new IAliveEntity.PlayerStatsT();
+        Playerstats.Health = Playerstats.MaxHealth = health;
         PosX = posX;
         PosY = posY;
         Name = name;
@@ -152,8 +143,9 @@ public class Player: IPlayerEnt
             sb.Append($"[{i++}] \t- {item.ItemMapName} - ");
             if (item.IsWeapon)
             {
-                IWeapon wep = (IWeapon)item;
-                sb.Append($"[Attack: {wep.Damage}, Defense: {wep.Defense} \t- ");
+                // IWeapon wep = (IWeapon)item;
+                // sb.Append($"[Attack: {wep.}, Defense: {wep.Defense} \t- ");
+                sb.Append($"[Attack: {item.GetDamage(Playerstats)}, Defense: {0} \t- ");
             }
 
             sb.Append($"{item.Name} \t\t - {item.Description}\n");
@@ -187,9 +179,9 @@ public class Player: IPlayerEnt
 
     public StringBuilder GetHpSb()
     {
-        int percentage = (int)(10.0 * PlayerStats.Health / PlayerStats.MaxHealth);
+        int percentage = (int)(10.0 * Playerstats.Health / Playerstats.MaxHealth);
         StringBuilder sb = new();
-        sb.Append($"HP: [{PlayerStats.Health}/{PlayerStats.MaxHealth}]");
+        sb.Append($"HP: [{Playerstats.Health}/{Playerstats.MaxHealth}]");
         sb.Append("[");
         for (int i = 1; i <= percentage; i++)
         {
@@ -205,16 +197,21 @@ public class Player: IPlayerEnt
         return sb;
     }
 
-    public StringBuilder GetStats()
+    public IAliveEntity.PlayerStatsT getEffectiveStats()
     {
-        IPlayerEnt.PlayerStatsT effstats = new IPlayerEnt.PlayerStatsT();
+        IAliveEntity.PlayerStatsT effstats = new IAliveEntity.PlayerStatsT();
         foreach (IItem item in Hands)
         {
             if(item == null) continue;
             effstats = effstats + item.GetStatModifiers();
         }
 
-        effstats = effstats + PlayerStats;
+        return effstats = effstats + Playerstats;
+        
+    }
+    public StringBuilder GetStats()
+    {
+        IAliveEntity.PlayerStatsT effstats = getEffectiveStats();
          
         StringBuilder sb = new();
         sb.AppendLine($"Strength: \t\t{effstats.Strength}");
@@ -232,6 +229,8 @@ public class Player: IPlayerEnt
         return true;
     }
 
+    
+
     public StringBuilder GetHandsContent()
     {
         StringBuilder sb = new();
@@ -247,5 +246,29 @@ public class Player: IPlayerEnt
 
         if (sb.Length <= 0) sb.AppendLine("I am empty handed");
         return sb;
+    }
+
+    public int CalculateAttackDamage(IWeaponVisitor vis)
+    {
+        IAliveEntity.PlayerStatsT stats = getEffectiveStats();
+        int h1 = 0, h2 = 0;
+        
+        var weapon = Hands[0] as IWeapon;
+        if (weapon != null && Hands[0].IsWeapon)
+        {
+            h1 = weapon.Accept(vis);
+        }
+        weapon = Hands[1] as IWeapon;
+        if (weapon != null && Hands[1].IsWeapon)
+        {
+            h2 = weapon.Accept(vis);
+        }
+        
+        return Math.Max(h1, h2);
+    }
+
+    public int CalculateDefense(IWeaponVisitor vis, IWeapon enemyWeapon)
+    {
+        return enemyWeapon.GetDefense(vis, Playerstats);
     }
 }

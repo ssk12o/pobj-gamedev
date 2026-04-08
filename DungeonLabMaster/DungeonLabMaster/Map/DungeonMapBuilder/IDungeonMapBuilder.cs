@@ -1,3 +1,5 @@
+using DungeonLabMaster.MovableEntities.Enemy;
+
 namespace DungeonLabMaster.Map;
 
 public interface IDungeonMapBuilder
@@ -11,4 +13,5 @@ public interface IDungeonMapBuilder
     void AddCentralHall(int height, int width);
     void AddItems(int  numberOfItems, DungeonItemFactory factory);
     void AddWeapon(int numberOfWeapons, DungeonItemFactory factory);
+    void AddEnemies(int numberOfEnemies, IEnemyFactory factory);
 }

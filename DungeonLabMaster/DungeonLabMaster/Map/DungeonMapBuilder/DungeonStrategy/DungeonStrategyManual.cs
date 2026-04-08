@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using DungeonLabMaster.MovableEntities.Enemy;
 
 namespace DungeonLabMaster.Map;
 
@@ -19,6 +20,7 @@ public class DungeonStrategyManual: IDungeonStrategy
     public void Construct(IDungeonMapBuilder mapBuilder)
     {
         DungeonItemFactory factory = new DungeonItemFactory();
+        IEnemyFactory enemyFactory = new GoblinFactory();
         int chosenOption = 1;
         while (chosenOption > 0)
         {
@@ -31,7 +33,7 @@ public class DungeonStrategyManual: IDungeonStrategy
 
             switch (chosenOption)
             {
-                case 0: ; break;
+                case 0: break;
                 case 1: mapBuilder.BuildBaseMapEmpty();break;
                 case 2: mapBuilder.BuildBaseMapFull(); break;
                 case 3:
@@ -75,6 +77,16 @@ public class DungeonStrategyManual: IDungeonStrategy
                     }
                     mapBuilder.AddWeapon(numOfWeapons, factory);
                     break;
+                case 8:
+                    Console.WriteLine("How many enemies add?");
+                    int numOfEnemies = 0;
+                    while(!int.TryParse(Console.ReadLine(), out numOfEnemies) || (numOfEnemies < 0))
+                    {
+                        Console.WriteLine("Invalid option. try again.");
+                        Thread.Sleep(1000);
+                    }
+                    mapBuilder.AddEnemies(numOfEnemies, enemyFactory);
+                    break;
                 
             }
         }
@@ -86,13 +98,14 @@ public class DungeonStrategyManual: IDungeonStrategy
         Console.WriteLine(
             "Manual builder menu! Options:\n" +
             "[0] - to exit\n" + 
-            "[1] - to set map empty\n " +
+            "[1] - to set map empty\n" +
             "[2] - to set map full\n" +
             "[3] - to add random corridors\n" + 
             "[4] - to add rooms\n" + 
             "[5] - to add central hall\n"+
             "[6] - to add random items\n" +
-            "[7] - to add random weapons"
+            "[7] - to add random weapons\n" +
+            "[8] - to add enemies"
             );
 }
 

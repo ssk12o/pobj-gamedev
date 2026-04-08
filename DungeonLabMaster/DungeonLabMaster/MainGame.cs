@@ -56,6 +56,11 @@ public class MainGame
                 mapa.PrintRound();
                 ConsoleKey pressedKey = Console.ReadKey(true).Key;
                 lGCommandWsad.HandleEvent(pressedKey, mapa, ref keepRunning);
+                if (!mapa.playerIsAlive)
+                {
+                    keepRunning = false;
+                    Console.WriteLine("\n\nGame over!!!\n\n");
+                }
             }
         }
 

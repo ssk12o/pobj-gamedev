@@ -1,9 +1,13 @@
+using DungeonLabMaster.Items.Weapons;
+
 namespace DungeonLabMaster.MovableEntities;
 
-public interface IPlayerEnt
+public interface IAliveEntity
 {
     string Name { get; }
     char MapChar { get; }
+    
+    public PlayerStatsT Playerstats { get;  }
     public class PlayerStatsT
     {
         public int Strength { get; set; }
@@ -32,4 +36,26 @@ public interface IPlayerEnt
     int PosX { get; set; }
     int PosY { get; set; }
     bool Move(int y, int x);
+    public int TakeDamage(int damage)
+    {
+        
+        Playerstats.Health = Playerstats.Health -  damage;
+        if (Playerstats.Health <= 0)
+        {
+            Console.WriteLine($"{Name} is dead");
+            Playerstats.Health = 0;
+        }
+        Console.WriteLine($"{Name} takes {damage} damage and ends up with {Playerstats.Health} hp.");
+        
+        return Playerstats.Health;
+    }
+
+    public int CalculateAttackDamage(IWeaponVisitor vis);
+
+    public  int CalculateDefense(IWeaponVisitor vis, IWeapon enemyWeapon)
+    {
+        return enemyWeapon.GetDefense(vis, Playerstats);
+    }
+    
+    
 }

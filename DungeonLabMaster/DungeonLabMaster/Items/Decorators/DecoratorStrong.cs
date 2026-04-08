@@ -9,14 +9,16 @@ public class DecoratorStrong: ItemDecorator
         ;
     }
 
-    protected override IPlayerEnt.PlayerStatsT getModifierStats()
+    protected override IAliveEntity.PlayerStatsT getModifierStats()
     {
-        return new  IPlayerEnt.PlayerStatsT { };
+        return new  IAliveEntity.PlayerStatsT { };
     }
 
     protected override string getModifierName() => "Strong";
-    public override int GetDamage(IPlayerEnt.PlayerStatsT playerStats)
+    public override int GetDamage(IAliveEntity.PlayerStatsT playerStats)
     {
         return base.GetDamage(playerStats) + 5;
     }
+
+    protected override int GetDefenseBonus() => 10;
 }

@@ -1,10 +1,11 @@
+using DungeonLabMaster.MovableEntities;
+
 namespace DungeonLabMaster.Items.Weapons;
 
 public interface IWeapon
 {
-    int Damage { get; }
-    int Defense { get; }
-    int Handness { get; }
-    string Name { get; }
-    string Description { get; }
+    int Accept(IWeaponVisitor visitor);
+    int GetDefense(IWeaponVisitor visitor, IAliveEntity.PlayerStatsT stats);
+    string GetCategoryOfWeapon(); 
+    // heavy, light magic
 }

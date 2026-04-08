@@ -1,6 +1,7 @@
 using System.Text;
 using DungeonLabMaster.Items;
 using DungeonLabMaster.MovableEntities;
+using DungeonLabMaster.MovableEntities.Enemy;
 
 namespace DungeonLabMaster.Map;
 
@@ -9,15 +10,27 @@ public class Map
     private int _movementRound;
     private int _height, _width;
     private Tile[,] _dungeonMap;
-    // private List<IPlayerEnt>  _playerEnts;
+    private List<IAliveEntity> _enemies;
     public List<string> HelpTextList;
     private Player _player;
+    public bool playerIsAlive {get; protected set;} = true;
 
     public bool TryMoveMainPlayer(int y, int x)
     {
         if(!CheckIfTileIsReachable( _player.PosY +  y, _player.PosX + x)) return false;
         return _player.Move(y, x);
     }
+    // // ========================================================================
+
+    private bool CheckIfPositionIsOnMap(int y, int x)
+    {
+        return x >= 0 && x < _width && y >= 0 && y < _height;
+    }
+    private bool CheckIfTileIsReachable(int y, int x)
+    {
+        return CheckIfPositionIsOnMap(y, x) && _dungeonMap[y, x].NotAWallOrATrap;
+    }
+    // // ========================================================================
 
     public Map(int height, int width)
     {
@@ -33,8 +46,9 @@ public class Map
         }
         _player = new Player();
     }
-    public Map(int height, int width, Tile[,] generatedDungeonMap, Player player,  List<string> helpTextList)
+    public Map(int height, int width, Tile[,] generatedDungeonMap, Player player,  List<string> helpTextList, List<IAliveEntity> enemies)
     {
+        _enemies = enemies;
         _width = width;
         _height = height;
         _dungeonMap = generatedDungeonMap;
@@ -42,135 +56,48 @@ public class Map
         HelpTextList = helpTextList;
     }
 
-    // ========================================================================
-
-    private bool CheckIfPositionIsOnMap(int y, int x)
-    {
-        return x >= 0 && x < _width && y >= 0 && y < _height;
-    }
-
-    private bool CheckIfTileIsReachable(int y, int x)
-    {
-        return CheckIfPositionIsOnMap(y, x) && _dungeonMap[y, x].NotAWallOrATrap;
-    }
-
-    private bool CheckIfTileIsEmpty(int y, int x)
-    {
-        return _dungeonMap[y, x].IsEmpty;
-    }
-    
-    public bool AddItemToMap(int y, int x, IItem item)
-    {  
-        if (!CheckIfTileIsReachable(y, x)) return false;
-        return _dungeonMap[y, x].PutItemHere(item);
-    }
-    public bool RemoveWallTileFromMap(int y, int x)
-    {
-        if(!CheckIfPositionIsOnMap(y, x)) return false;
-        return _dungeonMap[y, x].RemoveWallHere();
-    }
-
-    public bool AddWallToMap(int y, int x)
-    {
-        if(!CheckIfPositionIsOnMap(y, x) || !CheckIfTileIsEmpty(y, x)) return false;
-        return _dungeonMap[y, x].PutWallHere();
-    }
-    public bool DrawWallStraightLineToDungeonMap(int x1, int y1, int x2, int y2)
-    {
-        if(!CheckIfPositionIsOnMap(y1, x1) && !CheckIfPositionIsOnMap(y2, x2)) return false;
-        if (x1 == x2)
-        {
-            for (int y = y1; y <= y2; y++)
-            {
-                AddWallToMap(y,  x1);
-            }
-            return true;
-        } 
-        else if (y1 == y2)
-        {
-            for (int x = x1; x <= x2; x++)
-            {
-                AddWallToMap(y1, x);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public bool DrawWallSquareToDungeonMap(int y1, int x1, int y2, int x2)
-    {
-        // if(!CheckIfPositionIsOnMap(y1, x1)) return false;
-        // if(!CheckIfPositionIsOnMap(y2, x2)) return false;
-        
-        if (x1 > x2)
-        {
-            (x1, x2) = (x2, x1);
-        }
-        if (y1 > y2)
-        {
-            (y1, y2) = (y2, y1);
-        }
-        
-        DrawWallStraightLineToDungeonMap(x1, y1, x2, y1);
-        DrawWallStraightLineToDungeonMap(x1, y2, x2, y2);
-        DrawWallStraightLineToDungeonMap(x1, y1, x1, y2);
-        DrawWallStraightLineToDungeonMap(x2, y1, x2, y2);
-        return true;
-    }
-
-    public bool DrawRoomToDungeonMap(int y1, int x1, int y2, int x2)
-    {
-        // if(!CheckIfPositionIsOnMap(y1, x1)) return false;
-        // if(!CheckIfPositionIsOnMap(y2, x2)) return false;
-        
-        if (x1 > x2)
-        {
-            (x1, x2) = (x2, x1);
-        }
-        if (y1 > y2)
-        {
-            (y1, y2) = (y2, y1);
-        }
-
-        for (int y = y1; y <= y2; y++)
-        {
-            for (int x = x1; x <= x2; x++)
-            {
-                _dungeonMap[y, x].RemoveWallHere();
-            }
-        }
-        return true;
-    }
-
-    public bool DrawEmptyRoomInMap(int y1, int x1, int y2, int x2)
-    {
-        for (int y = y1; y <= y2; y++)
-        {
-            for (int x = x1; x <= x2; x++)
-            {
-                RemoveWallTileFromMap(y, x);
-            }
-        }
-
-        return true;
-    }
-
-
-    // ========================================================================
+    // // ========================================================================
     private StringBuilder GenerateMapSb()
     {
+        int pidx = getSBidxFromXY(_player.PosY, _player.PosX);
+
         StringBuilder sb = new StringBuilder();
         for (int y = 0; y < _height; y++)
         {
             for (int x = 0; x < _width; x++)
             {
-                if (y == _player.PosY && x == _player.PosX) sb.Append(_player.MapChar);
-                else sb.Append(_dungeonMap[y, x].PrintValue);
+                sb.Append(_dungeonMap[y, x].PrintValue);
             }
             sb.AppendLine();
         }
+        
+        if (_enemies != null)
+        {
+            IAliveEntity enemyToBeRmoved = null;
+            foreach (IAliveEntity enemy in _enemies)
+            {
+                int idx = getSBidxFromXY(enemy.PosY, enemy.PosX);
+                if (idx == pidx)
+                {
+                    var combat = new Combat(enemy, _player);
+                    combat.arenaFight();
+                    if (_player.getEffectiveStats().Health <= 0) playerIsAlive = false;
+                    else enemyToBeRmoved = enemy;
+                }
+                sb[idx] = enemy.MapChar;
+            }
+
+            if (enemyToBeRmoved != null) _enemies.Remove(enemyToBeRmoved);
+        }
+
+        sb[pidx] = _player.MapChar;
 
         return sb;
+    }
+
+    private int getSBidxFromXY(int y, int x)
+    {
+        return y * (_width + 1) + x;
     }
 
     private void PrintOverField()
