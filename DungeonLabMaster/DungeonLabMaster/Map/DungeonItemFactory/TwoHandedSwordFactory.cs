@@ -4,7 +4,7 @@ namespace DungeonLabMaster.Map.FactoryDep;
 
 public class TwoHandedSwordFactory
 {
-    private int _minAttack = 12;
+    private int _minAttack = 20;
     private int _maxAttack = 30;
     private int _minDefense = 12;
     private int _maxDefense = 20;

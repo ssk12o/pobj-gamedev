@@ -42,10 +42,13 @@ public class DungeonItemFactory
                 created =  _facBuckler.Create();
             break;
         }
+        
         if(Random.Shared.Next(2) == 0)
             created = new DecoratorStrong(created);
         if(Random.Shared.Next(4) == 0)
             created = new DecoratorUnlucky(created);
+        if(Random.Shared.Next(3) == 0)
+            created = new DecoratorAgile(created);
         
         return created;
     }

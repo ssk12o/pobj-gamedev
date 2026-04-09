@@ -7,8 +7,8 @@ namespace DungeonLabMaster.Map.FactoryDep;
 
 public class OneHandedSwordFactory
 {
-    private int _minAttack = 12;
-    private int _maxAttack = 30;
+    private int _minAttack = 5;
+    private int _maxAttack = 15;
     private int _minDefense = 12;
     private int _maxDefense = 20;
 

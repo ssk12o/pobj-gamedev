@@ -5,10 +5,10 @@ namespace DungeonLabMaster.Map.FactoryDep;
 
 public class BucklerFactory
 {
-    private int _minAttack = 12;
-    private int _maxAttack = 30;
-    private int _minDefense = 12;
-    private int _maxDefense = 20;
+    private int _minAttack = 2;
+    private int _maxAttack = 5;
+    private int _minDefense = 20;
+    private int _maxDefense = 30;
 
     public IItem Create()
     {

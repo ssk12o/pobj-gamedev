@@ -11,7 +11,8 @@ public class DecoratorStrong: ItemDecorator
 
     protected override IAliveEntity.PlayerStatsT getModifierStats()
     {
-        return new  IAliveEntity.PlayerStatsT { };
+        return new IAliveEntity.PlayerStatsT {Strength = 12};
+
     }
 
     protected override string getModifierName() => "Strong";
