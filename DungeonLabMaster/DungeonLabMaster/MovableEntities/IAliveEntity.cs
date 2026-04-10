@@ -50,6 +50,13 @@ public interface IAliveEntity
         return Playerstats.Health;
     }
 
+    public int HealDamage(int healing)
+    {
+        int end = Math.Max(Playerstats.MaxHealth, Playerstats.Health + healing);
+        Console.WriteLine($"Player heals {end -  Playerstats.MaxHealth} HP and ends up with {end} HP");
+        return Playerstats.Health = end; 
+    }
+
     public int CalculateAttackDamage(IWeaponVisitor vis);
 
     public  int CalculateDefense(IWeaponVisitor vis, IWeapon enemyWeapon)
