@@ -17,10 +17,8 @@ public class DungeonStrategyManual: IDungeonStrategy
         };
     }
 
-    public void Construct(IDungeonMapBuilder mapBuilder)
+    public void Construct(IDungeonMapBuilder mapBuilder, IDungeonItemFactory itemFactory, IEnemyFactory enemyFactory)
     {
-        DungeonItemFactory factory = new DungeonItemFactory();
-        IEnemyFactory enemyFactory = new GoblinFactory();
         int chosenOption = 1;
         while (chosenOption > 0)
         {
@@ -65,7 +63,7 @@ public class DungeonStrategyManual: IDungeonStrategy
                         Console.WriteLine("Invalid option. try again.");
                         Thread.Sleep(1000);
                     }
-                    mapBuilder.AddItems(numOfItems, factory);
+                    mapBuilder.AddItems(numOfItems, itemFactory);
                     break;
                 case 7: 
                     Console.WriteLine("How many wapons add?");
@@ -75,7 +73,7 @@ public class DungeonStrategyManual: IDungeonStrategy
                         Console.WriteLine("Invalid option. try again.");
                         Thread.Sleep(1000);
                     }
-                    mapBuilder.AddWeapon(numOfWeapons, factory);
+                    mapBuilder.AddWeapon(numOfWeapons, itemFactory);
                     break;
                 case 8:
                     Console.WriteLine("How many enemies add?");

@@ -1,8 +1,10 @@
+using DungeonLabMaster.MovableEntities.Enemy;
+
 namespace DungeonLabMaster.Map;
 
 public class DungeonStrategyLab: IDungeonStrategy
 {
-    public void Construct(IDungeonMapBuilder mapBuilder)
+    public void Construct(IDungeonMapBuilder mapBuilder, IDungeonItemFactory itemFactory, IEnemyFactory enemyFactory)
     {
         mapBuilder.BuildBaseMapFull();
         mapBuilder.AddCorridors(12);
@@ -22,12 +24,6 @@ public class DungeonStrategyLab: IDungeonStrategy
 
     public string GetDescription()
     {
-        return "Lab";
+        return "Labirynth";
     }
 }
-
-// "\t - WSAD to move",
-// "\t - E to equip item (if possible) or print long items in inventory\n",
-// "\t - I to remove item from inventory\n" ,
-// "\t - Backspace to exit game\n",
-// "\t - H to enter help menu\n"

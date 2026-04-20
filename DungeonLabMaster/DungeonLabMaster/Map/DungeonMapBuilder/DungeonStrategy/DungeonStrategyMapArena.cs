@@ -4,12 +4,11 @@ namespace DungeonLabMaster.Map;
 
 public class DungeonStrategyMapArena:IDungeonStrategy
 {
-    private IEnemyFactory _enemyFactory = new GoblinFactory();
-    public void Construct(IDungeonMapBuilder mapBuilder)
+    public void Construct(IDungeonMapBuilder mapBuilder, IDungeonItemFactory itemFactory, IEnemyFactory enemyFactory)
     {
         mapBuilder.BuildBaseMapEmpty();
-        mapBuilder.AddWeapon(4, new DungeonItemFactory());
-        mapBuilder.AddEnemies(3, _enemyFactory);
+        mapBuilder.AddWeapon(4, itemFactory);
+        mapBuilder.AddEnemies(3, enemyFactory);
         mapBuilder.SetHelpInfo(GetHelpMessages());
     }
 

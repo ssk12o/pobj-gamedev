@@ -7,21 +7,23 @@ namespace DungeonLabMaster.Map;
 public class DungeonMapBuilder: IDungeonMapBuilder
 {
     private List<IAliveEntity> _enemies = new List<IAliveEntity>();
-    private IEnemyFactory _enemyFactory;
     private bool _valid = false;
     private int  _width, _height;
     private Tile [,]? _dungeonMap;
-    private DungeonItemFactory _dungeonItemFactory;
     private List<string> _helpTextList;
     public DungeonMapBuilder(int height = 20, int width = 40)
     {
         Console.WriteLine("DungeonMapBuilder -- starting up");
         _width = width;
         _height = height;
-        _dungeonItemFactory = new DungeonItemFactory();
-        _enemyFactory = new GoblinFactory();
     }
 
+    public void AddCustomItem(IItem item)
+    {
+        var (y, x) = GetPositionOfRandomEmptyTile();
+        AddItemToMap(y, x, item);
+    }
+    
     private (int y, int x) GetPositionOfRandomEmptyTile()
     {
         while (true)
@@ -192,7 +194,7 @@ public class DungeonMapBuilder: IDungeonMapBuilder
 
     }
 
-    public void AddItems(int numberOfItems, DungeonItemFactory factory)
+    public void AddItems(int numberOfItems, IDungeonItemFactory factory)
     {
         TestIfMapIsValid();
         for (int i = 0; i < numberOfItems; i++)
@@ -202,7 +204,7 @@ public class DungeonMapBuilder: IDungeonMapBuilder
         }
     }
 
-    public void AddWeapon(int numberOfWeapons, DungeonItemFactory factory)
+    public void AddWeapon(int numberOfWeapons, IDungeonItemFactory factory)
     {
         TestIfMapIsValid();
         for (int i = 0; i < numberOfWeapons; i++)
@@ -216,7 +218,7 @@ public class DungeonMapBuilder: IDungeonMapBuilder
         for (int i = 0; i < numberOfEnemiesN; i++)
         {
             var pos =  GetPositionOfRandomEmptyTile();
-            IAliveEntity g = _enemyFactory.CreateEnemy(pos.y, pos.x);
+            IAliveEntity g = factory.CreateEnemy(pos.y, pos.x);
             _enemies.Add(g);
         }
     }

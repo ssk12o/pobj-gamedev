@@ -1,8 +1,10 @@
+using DungeonLabMaster.MovableEntities.Enemy;
+
 namespace DungeonLabMaster.Map;
 
 public class DungeonStrategyClassic: IDungeonStrategy
 {
-    public  void Construct(IDungeonMapBuilder mapBuilder)
+    public void Construct(IDungeonMapBuilder mapBuilder, IDungeonItemFactory itemFactory, IEnemyFactory enemyFactory)
     {
         mapBuilder.BuildBaseMapFull();
         mapBuilder.AddCorridors(20);
