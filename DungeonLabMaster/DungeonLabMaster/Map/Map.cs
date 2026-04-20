@@ -1,5 +1,6 @@
 using System.Text;
 using DungeonLabMaster.Items;
+using DungeonLabMaster.Logging;
 using DungeonLabMaster.MovableEntities;
 using DungeonLabMaster.MovableEntities.Enemy;
 
@@ -17,7 +18,11 @@ public class Map
 
     public bool TryMoveMainPlayer(int y, int x)
     {
-        if(!CheckIfTileIsReachable( _player.PosY +  y, _player.PosX + x)) return false;
+        if (!CheckIfTileIsReachable(_player.PosY + y, _player.PosX + x))
+        {
+            Logger.Instance.Log("Player tyied to move into wall", ELogCategory.MovementInfo);
+            return false;
+        }
         return _player.Move(y, x);
     }
     // // ========================================================================
@@ -185,7 +190,20 @@ public class Map
         Console.Write($"DungeonLabMaster after round {_movementRound++}:\n" + GenerateMapSb().ToString());
         PrintOverField();
         PrintPlayerStatsAndWeaponsAndInventory();
-        
+        PrintConsoleLastN();
+
+    }
+
+    public void PrintConsoleLastN(int n = 5)
+    {
+        Console.WriteLine("Recent events:");
+        var list = Logger.Instance.ReturnLastNLogs(n);
+        foreach (var entry in list)
+        {
+            Console.WriteLine(entry);
+        }
+        Console.WriteLine("----------------------------------------");
+
     }
 
     public bool PlayerTryPickUpItem()

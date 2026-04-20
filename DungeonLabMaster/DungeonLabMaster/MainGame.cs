@@ -1,7 +1,9 @@
+using DungeonLabMaster.DungeonThemes;
 using DungeonLabMaster.GameInputCoR;
 using DungeonLabMaster.Items;
 using DungeonLabMaster.Items.Weapons;
 using DungeonLabMaster.Items.Weapons.OrdinaryItems;
+using DungeonLabMaster.Logging;
 using DungeonLabMaster.Map;
 
 namespace DungeonLabMaster;
@@ -10,30 +12,54 @@ public class MainGame
 {
     public static void RunGame()
     {
-        List<IDungeonStrategy> automaticBuildingStrategies = new List<IDungeonStrategy>
-        {
-            new DungeonStrategyManual(), new DungeonStrategyClassic(), new DungeonStrategyLab(), new DungeonStrategyMapArena()
-        };
-        Console.WriteLine("Preparing the game...");
-        Console.WriteLine("Choose a way to build dungeon:");
-        for(int i = 0; i < automaticBuildingStrategies.Count; i++)
-        {
-            Console.WriteLine($"[{i}] - {automaticBuildingStrategies[i]}");
-        }
+        var config = ConfigFasade.Load("logs/config");
+        var logPath = LogFileFactory.CreateUniqueLogPath(config.LogFilePath, config.PlayerName);
         
-        int dungeonChoice;
-        while(!int.TryParse(Console.ReadLine(), out dungeonChoice)|| dungeonChoice < 0 || dungeonChoice > automaticBuildingStrategies.Count)
-        {
-            Console.WriteLine("Invalid option. try again.");
-            Thread.Sleep(1000);
-        }
-        IDungeonMapBuilder mapBuilder = new DungeonMapBuilder();
-        automaticBuildingStrategies[dungeonChoice].Construct(mapBuilder);
+        var fileLogger = new FileLoggerType(logPath);
+        var memoryLogger = new MemoryInternalLoggerType();
+        
+        Logger.Instance.AddStrategy(new TimeLoggerDecorator(fileLogger));
+        Logger.Instance.AddStrategy(memoryLogger);
+
+        Logger.Instance.Log($"Starting game. Player name is {config.PlayerName}", ELogCategory.Other);
+        Logger.Instance.Log($"Started game theme is set to {config.DungeonName}", ELogCategory.Other);
+
+        var theme = ThemeFactory.GetTheme(config.DungeonName);
+        Logger.Instance.Log(theme.ThemeIntroductionMessage, ELogCategory.Other);
+
+        Map.Map mapa = theme.getMap();
         
         
-        Map.Map mapa = mapBuilder.GetMap();
+        // List<IDungeonStrategy> automaticBuildingStrategies = new List<IDungeonStrategy>
+        // {
+        //     new DungeonStrategyManual(), new DungeonStrategyClassic(), new DungeonStrategyLab(), new DungeonStrategyMapArena()
+        // };
+        // Console.WriteLine("Preparing the game...");
+        // Console.WriteLine("Choose a way to build dungeon:");
+        // for(int i = 0; i < automaticBuildingStrategies.Count; i++)
+        // {
+        //     Console.WriteLine($"[{i}] - {automaticBuildingStrategies[i]}");
+        // }
+        //
+        // int dungeonChoice;
+        // while(!int.TryParse(Console.ReadLine(), out dungeonChoice)|| dungeonChoice < 0 || dungeonChoice > automaticBuildingStrategies.Count)
+        // {
+        //     Console.WriteLine("Invalid option. try again.");
+        //     Thread.Sleep(1000);
+        // }
+        // IDungeonMapBuilder mapBuilder = new DungeonMapBuilder();
+        // automaticBuildingStrategies[dungeonChoice].Construct(mapBuilder);
+        //
+        //
+        // Map.Map mapa = mapBuilder.GetMap();
+        
         WelcomeMessage();
         EventLoop(mapa);
+        
+        Logger.Instance.Log("Game ended", ELogCategory.Other);
+        Logger.Instance.Flush();
+        Console.WriteLine("Game ended");
+        
         
         void EventLoop(Map.Map mapa)
         {
@@ -43,23 +69,26 @@ public class MainGame
             IGameCommandCoR lGCommandHelp = new GameCommandHelp();
             IGameCommandCoR lGCommandInv = new GameCommandInventoryRemoval();
             IGameCommandCoR lGcommandEquip = new GameCommandEquip();
+            IGameCommandCoR lGCommandPrintLogs = new GameCommandPrintLogs();
             
             lGCommandInvInput.SetNext(lGCommandWsad);
             lGCommandWsad.SetNext(lGCommandExit);
             lGCommandExit.SetNext(lGCommandHelp);
             lGCommandHelp.SetNext(lGCommandInv);
             lGCommandInv.SetNext(lGcommandEquip);
+            lGcommandEquip.SetNext(lGCommandPrintLogs);
             
             bool keepRunning = true;
             while (keepRunning)
             {
                 mapa.PrintRound();
                 ConsoleKey pressedKey = Console.ReadKey(true).Key;
-                lGCommandWsad.HandleEvent(pressedKey, mapa, ref keepRunning);
+                lGCommandInvInput.HandleEvent(pressedKey, mapa, ref keepRunning);
                 if (!mapa.playerIsAlive)
                 {
                     keepRunning = false;
                     Console.WriteLine("\n\nGame over!!!\n\n");
+                    Logger.Instance.Log($"Game over. Player lost", ELogCategory.Other);
                 }
             }
         }
@@ -69,7 +98,6 @@ public class MainGame
             Console.Clear();
             Console.WriteLine("Map generated. starting!");
             Console.WriteLine("Welcome to DungeonLabMaster!");
-            Console.WriteLine("Bla bla bal");
             Console.WriteLine("press any key to continue...");
             ConsoleKey pressed = Console.ReadKey(true).Key;
         }
