@@ -3,7 +3,7 @@ using DungeonLabMaster.Map.FactoryDep;
 
 namespace DungeonLabMaster.Map;
 
-public class DungeonItemFactory
+public class DungeonItemFactory: IDungeonItemFactory
 {
     private OneHandedSwordFactory _facOneHandedSword = new OneHandedSwordFactory();
     private TwoHandedSwordFactory _facTwoHandedSword = new TwoHandedSwordFactory();
@@ -11,6 +11,8 @@ public class DungeonItemFactory
     private RockFactory _facRock = new RockFactory();
     private BigRockFactory _facBigRock = new BigRockFactory();
     private CurrencyFactory _facCurrency = new CurrencyFactory();
+    
+    
     public IItem CreateNewRandomItemOrdinary()
     {
         IItem created;
@@ -69,5 +71,10 @@ public class DungeonItemFactory
                     break;
         }
         return created;
+    }
+
+    public IItem CreateNewRandomDecorator(IItem wrapped)
+    {
+        throw new NotImplementedException();
     }
 }
