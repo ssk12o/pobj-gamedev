@@ -2,7 +2,7 @@ using DungeonLabMaster.Items;
 
 namespace DungeonLabMaster.Map.FactoryDep;
 
-public class TwoHandedSwordFactory
+public class TwoHandedSwordFactory: IFactoryDep
 {
     private int _minAttack = 20;
     private int _maxAttack = 30;

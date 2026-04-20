@@ -3,9 +3,9 @@ using DungeonLabMaster.MovableEntities;
 namespace DungeonLabMaster.Items.Weapons;
 
 
-public class MagicalStaff : MagicalWeapon
+public class MagicalWand : MagicalWeapon
 {
-    public MagicalStaff(int damage = 4, int defense = 18, string name = "MagicalStaff", string description = "Magical stuff -- brrrrrrrrrrr")
+    public MagicalWand(int damage = 4, int defense = 18, string name = "Magical Wand", string description = "Magical stuff -- brrrrrrrrrrr")
     {
         ItemMapName = 'I';
         Damage = damage;

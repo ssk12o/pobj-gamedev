@@ -5,18 +5,13 @@ namespace DungeonLabMaster.MovableEntities.Enemy;
 
 public class Goblin: IAliveEntity, IEnemy
 {
-    public int Attack { get; }
     public int Armor {get; }
-
     public string Name { get; } = "Goblin";
     public char MapChar { get; } = 'g';
     public int PosX { get; set; }
     public int PosY { get; set; }
     public IItem weapon { get; set; }
-  
-
     public IAliveEntity.PlayerStatsT Playerstats { get; protected set; }
-
 
     public Goblin(int y, int x, IItem weapn, int hp = 10)
     {

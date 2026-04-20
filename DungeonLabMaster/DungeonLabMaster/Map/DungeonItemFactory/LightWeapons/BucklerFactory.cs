@@ -3,7 +3,7 @@ using DungeonLabMaster.Items.Weapons;
 
 namespace DungeonLabMaster.Map.FactoryDep;
 
-public class BucklerFactory
+public class BucklerFactory: IFactoryDep
 {
     private int _minAttack = 2;
     private int _maxAttack = 5;

@@ -5,7 +5,7 @@ using Microsoft.VisualBasic;
 
 namespace DungeonLabMaster.Map.FactoryDep;
 
-public class OneHandedSwordFactory
+public class OneHandedSwordFactory: IFactoryDep
 {
     private int _minAttack = 5;
     private int _maxAttack = 15;
