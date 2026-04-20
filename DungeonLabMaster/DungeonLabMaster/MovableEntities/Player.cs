@@ -1,6 +1,7 @@
 using System.Text;
 using DungeonLabMaster.Items;
 using DungeonLabMaster.Items.Weapons;
+using DungeonLabMaster.Logging;
 
 namespace DungeonLabMaster.MovableEntities;
 
@@ -86,6 +87,8 @@ public class Player: IAliveEntity
                 Hands[itemNewIndex] = item;
                 break;
         }
+        
+        Logger.Instance.Log($"Player handed {item.Name}", ELogCategory.HandInfo);
     }
     public void UnhandItem()
     {
@@ -98,16 +101,19 @@ public class Player: IAliveEntity
             {
                 case ConsoleKey.R:
                     AddItemToEquipment(Hands[0]);
+                    Logger.Instance.Log($"Player unhanded {Hands[0].Name}", ELogCategory.HandInfo);
                     Hands[0] = null;
                     return;
                 case ConsoleKey.L:
                     AddItemToEquipment(Hands[1]);
+                    Logger.Instance.Log($"Player unhanded {Hands[1].Name}", ELogCategory.HandInfo);
                     Hands[1] = null;
                     return;
                 case ConsoleKey.Backspace:
                     return;
             }
         }
+
     }
 
     public void AddItemToEquipment(IItem? item)
@@ -123,6 +129,7 @@ public class Player: IAliveEntity
             return;
         }
         _inventory.Add(item);
+        Logger.Instance.Log($"Player added {item.Name} to inventory", ELogCategory.InventoryInfo);
     }
 
     public IItem? RemoveItemNoFromEquipment(int number)
@@ -131,6 +138,8 @@ public class Player: IAliveEntity
         
         IItem ret = _inventory[number];
         _inventory.RemoveAt(number);
+        
+        Logger.Instance.Log($"Player removed {ret.Name} from inventory", ELogCategory.InventoryInfo);
         return ret;
     }
 

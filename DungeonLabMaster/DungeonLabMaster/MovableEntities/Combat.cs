@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using DungeonLabMaster.Items.Weapons;
+using DungeonLabMaster.Logging;
 using DungeonLabMaster.MovableEntities.Enemy;
 
 namespace DungeonLabMaster.MovableEntities;
@@ -38,6 +39,7 @@ public class Combat
             else
             {
                 Console.WriteLine("Player waits to long to attacks...");
+                Logger.Instance.Log("Player waits to long to attacks...", ELogCategory.CombatInfo);
             }
 
             vis = GetVisitorFromAttackType((AttackType)Random.Shared.Next(2));
@@ -65,9 +67,13 @@ public class Combat
         int realDamage = Math.Max(0, rawDamage - ((IEnemy)enemy).Armor);
         
         Console.WriteLine($"Player attacks {enemy.Name} dealing {realDamage} dmg");
+        Logger.Instance.Log($"Player attacks {enemy.Name} dealing {realDamage} dmg", ELogCategory.CombatInfo);
+
         if (enemy.TakeDamage(realDamage) <= 0)
         {
             active = false;
+            Logger.Instance.Log($"{_player.Name} slains {_enemy.Name}",  ELogCategory.CombatInfo);
+
         }
     }
 
@@ -79,11 +85,13 @@ public class Combat
         int realDamage = Math.Max(0, rawDamage - rawDefense);
         
         Console.WriteLine($"{enemy.Name} attacks Player dealing {realDamage} dmg");
+        Logger.Instance.Log($"{enemy.Name} attacks Player dealing {realDamage} dmg", ELogCategory.CombatInfo);
 
         IAliveEntity playerEnt = player as IAliveEntity;
         if (((IAliveEntity)player).TakeDamage(realDamage) <= 0)
         {
             active = false;
+            Logger.Instance.Log($"{_enemy.Name} slains {_player.Name}.",  ELogCategory.CombatInfo);
         }
     }
 
@@ -111,6 +119,7 @@ public class Combat
     private void PrintGreeter()
     {
         Console.WriteLine("You are fighting against enemy!");
+        Logger.Instance.Log($"{_player.Name} starts fight with {_enemy.Name}",  ELogCategory.CombatInfo);
     }
 
     private void PrintOptions()
