@@ -1,3 +1,5 @@
+using DungeonLabMaster.Logging;
+
 namespace DungeonLabMaster.GameInputCoR;
 
 public class GameCommandInvalidInput: GameCommandCoRBase
@@ -6,6 +8,7 @@ public class GameCommandInvalidInput: GameCommandCoRBase
     {
         if (!base.HandleEvent(pressedKey, mapa, ref keepRunning))
         {
+            Logger.Instance.Log("Player made invalid move", ELogCategory.GameInputInfo);
             Console.WriteLine("invalid input");
             Thread.Sleep(5000);
         }
