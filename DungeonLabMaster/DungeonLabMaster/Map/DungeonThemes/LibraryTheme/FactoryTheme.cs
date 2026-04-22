@@ -16,7 +16,7 @@ public class FactoryTheme: IDungeonTheme
     
     public IItem CreateArtifact()
     {
-        IItem artifact = new Blaster(damage: 30);
+        IItem artifact = new Blaster(damage: 30, name: "Legendary Blaster");
         return new DecoratorStrong(ItemFactory.CreateNewRandomDecorator(artifact));
     }
 }

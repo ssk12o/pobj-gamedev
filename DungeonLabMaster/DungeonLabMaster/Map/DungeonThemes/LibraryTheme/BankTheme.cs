@@ -17,7 +17,7 @@ public class BankTheme: IDungeonTheme
     
     public IItem CreateArtifact()
     {
-        IItem artifact = new MoneyBagWeapon(damage: 30);
+        IItem artifact = new MoneyBagWeapon(damage: 30, name: "Legendary Money Bag");
         return new DecoratorStrong(  ItemFactory.CreateNewRandomDecorator(artifact));
     }
 }

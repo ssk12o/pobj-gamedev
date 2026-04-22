@@ -5,6 +5,7 @@ namespace DungeonLabMaster.MovableEntities.Enemy;
 
 public class Mage: IAliveEntity, IEnemy
 {
+    public int attack { get; set; } = 10;
     public int Armor {get; }
 
     public string Name { get; } = "Mage";
@@ -42,7 +43,9 @@ public class Mage: IAliveEntity, IEnemy
             h = _weapon.Accept(vis);
         }
         
-        return Math.Max(0, h);
+        // return Math.Max(0, h);
+        // TODO: tmp for demonstration purposes
+        return 25;
     }
 
 

@@ -5,7 +5,7 @@ namespace DungeonLabMaster.MovableEntities.Enemy;
 
 public class Robot: IAliveEntity, IEnemy
 {
-    public int Attack { get; }
+    public int attack { get; set; } = 10;
     public int Armor {get; }
 
     public string Name { get; } = "Robot";

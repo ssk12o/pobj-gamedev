@@ -18,7 +18,7 @@ public class LibraryTheme: IDungeonTheme
     
     public IItem CreateArtifact()
     {
-        IItem artifact = new MagicalStaff(damage: 30);
+        IItem artifact = new MagicalStaff(damage: 30, name: "Legendary Magical Staff");
         return new DecoratorStrong(  ItemFactory.CreateNewRandomDecorator(artifact));
     }
 }

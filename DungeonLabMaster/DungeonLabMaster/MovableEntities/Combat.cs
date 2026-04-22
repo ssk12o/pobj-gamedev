@@ -42,7 +42,8 @@ public class Combat
                 Logger.Instance.Log("Player waits to long to attacks...", ELogCategory.CombatInfo);
             }
 
-            vis = GetVisitorFromAttackType((AttackType)Random.Shared.Next(2));
+            AttackType enemyAttackType = (AttackType)Random.Shared.Next(2);
+            vis = GetVisitorFromAttackType(enemyAttackType);
             EnemyAttack(_player, _enemy);
         }
         
@@ -80,7 +81,7 @@ public class Combat
     private void EnemyAttack(Player player, IAliveEntity enemy)
     {
         if(vis == null || active == false) return;
-        int rawDamage = ((IWeapon)((IEnemy)enemy).weapon).Accept(vis);
+        int rawDamage = ((IEnemy)enemy).attack;
         int rawDefense = player.CalculateDefense(vis,  ((IWeapon)((IEnemy)enemy).weapon));
         int realDamage = Math.Max(0, rawDamage - rawDefense);
         

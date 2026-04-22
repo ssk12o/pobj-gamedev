@@ -6,6 +6,8 @@ namespace DungeonLabMaster.MovableEntities.Enemy;
 public class Safe: IAliveEntity, IEnemy
 {
     public int Armor {get; }
+    public int attack { get; set; } = 10;
+
     public string Name { get; } = "Goblin";
     public char MapChar { get; } = 'g';
     public int PosX { get; set; }

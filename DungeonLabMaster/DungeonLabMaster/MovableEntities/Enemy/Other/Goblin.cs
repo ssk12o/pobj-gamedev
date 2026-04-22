@@ -5,6 +5,7 @@ namespace DungeonLabMaster.MovableEntities.Enemy;
 
 public class Goblin: IAliveEntity, IEnemy
 {
+    public int attack { get; set; } = 10;
     public int Armor {get; }
     public string Name { get; } = "Goblin";
     public char MapChar { get; } = 'g';

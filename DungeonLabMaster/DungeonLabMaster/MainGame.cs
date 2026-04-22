@@ -89,6 +89,7 @@ public class MainGame
                     keepRunning = false;
                     Console.WriteLine("\n\nGame over!!!\n\n");
                     Logger.Instance.Log($"Game over. Player lost", ELogCategory.Other);
+                    Logger.Instance.Flush();
                 }
             }
         }
