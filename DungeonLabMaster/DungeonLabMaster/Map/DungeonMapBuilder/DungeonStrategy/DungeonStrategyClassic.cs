@@ -7,11 +7,12 @@ public class DungeonStrategyClassic: IDungeonStrategy
     public void Construct(IDungeonMapBuilder mapBuilder, IDungeonItemFactory itemFactory, IEnemyFactory enemyFactory)
     {
         mapBuilder.BuildBaseMapFull();
-        mapBuilder.AddCorridors(20);
-        mapBuilder.AddRooms(5);
+        mapBuilder.AddRooms(6);
         mapBuilder.AddCentralHall(12, 12);
-        mapBuilder.AddWeapon(5, new DungeonItemFactory());
-        mapBuilder.AddItems(12, new DungeonItemFactory());
+        mapBuilder.AddCorridors(12);
+        mapBuilder.AddWeapon(5,  itemFactory);
+        mapBuilder.AddItems(12, itemFactory);
+        mapBuilder.AddEnemies(5, enemyFactory);
         mapBuilder.SetHelpInfo(GetHelpMessages());
     }
 

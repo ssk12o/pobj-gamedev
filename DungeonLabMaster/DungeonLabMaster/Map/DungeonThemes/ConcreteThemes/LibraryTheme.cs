@@ -12,7 +12,7 @@ public class LibraryTheme: IDungeonTheme
     public string ThemeIntroductionMessage =>
         "\"Zapach starych książek wypełnia powietrze\": loch składa się z wielu korytarzy, pula przedmiotów zawiera książki z pozytywnymi modyfikatorami mądrości, w lochu jest \"Czarna Różdżka\" i magowie;";
 
-    public IDungeonStrategy GenerationStrategy => new DungeonStrategyMapArena();
+    public IDungeonStrategy GenerationStrategy => new DungeonStrategyClassic();
     public IDungeonItemFactory ItemFactory => new LibraryItemFactory();
     public IEnemyFactory EnemyFactory => new LibraryEnemyFactory(ItemFactory);
     

@@ -7,8 +7,8 @@ public class DungeonStrategyLab: IDungeonStrategy
     public void Construct(IDungeonMapBuilder mapBuilder, IDungeonItemFactory itemFactory, IEnemyFactory enemyFactory)
     {
         mapBuilder.BuildBaseMapFull();
-        mapBuilder.AddCorridors(12);
         mapBuilder.AddRooms(5);
+        mapBuilder.AddCorridors(12);
         mapBuilder.SetHelpInfo(GetHelpMessages());
     }
 

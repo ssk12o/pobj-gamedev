@@ -29,30 +29,6 @@ public class MainGame
 
         Map.Map mapa = theme.getMap();
         
-        
-        // List<IDungeonStrategy> automaticBuildingStrategies = new List<IDungeonStrategy>
-        // {
-        //     new DungeonStrategyManual(), new DungeonStrategyClassic(), new DungeonStrategyLab(), new DungeonStrategyMapArena()
-        // };
-        // Console.WriteLine("Preparing the game...");
-        // Console.WriteLine("Choose a way to build dungeon:");
-        // for(int i = 0; i < automaticBuildingStrategies.Count; i++)
-        // {
-        //     Console.WriteLine($"[{i}] - {automaticBuildingStrategies[i]}");
-        // }
-        //
-        // int dungeonChoice;
-        // while(!int.TryParse(Console.ReadLine(), out dungeonChoice)|| dungeonChoice < 0 || dungeonChoice > automaticBuildingStrategies.Count)
-        // {
-        //     Console.WriteLine("Invalid option. try again.");
-        //     Thread.Sleep(1000);
-        // }
-        // IDungeonMapBuilder mapBuilder = new DungeonMapBuilder();
-        // automaticBuildingStrategies[dungeonChoice].Construct(mapBuilder);
-        //
-        //
-        // Map.Map mapa = mapBuilder.GetMap();
-        
         WelcomeMessage();
         EventLoop(mapa);
         
