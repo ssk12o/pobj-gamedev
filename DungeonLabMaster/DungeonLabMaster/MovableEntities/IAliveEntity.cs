@@ -1,4 +1,5 @@
 using DungeonLabMaster.Items.Weapons;
+using DungeonLabMaster.SoundPropagation;
 
 namespace DungeonLabMaster.MovableEntities;
 
@@ -8,6 +9,7 @@ public interface IAliveEntity
     char MapChar { get; }
     
     public PlayerStatsT Playerstats { get;  }
+    
     public class PlayerStatsT
     {
         public int Strength { get; set; }
@@ -38,7 +40,6 @@ public interface IAliveEntity
     bool Move(int y, int x);
     public int TakeDamage(int damage)
     {
-        
         Playerstats.Health = Playerstats.Health -  damage;
         if (Playerstats.Health <= 0)
         {
@@ -64,5 +65,5 @@ public interface IAliveEntity
         return enemyWeapon.GetDefense(vis, Playerstats);
     }
     
-    
+   
 }

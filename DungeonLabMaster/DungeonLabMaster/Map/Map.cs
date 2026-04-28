@@ -15,7 +15,9 @@ public class Map
     public List<string> HelpTextList;
     private Player _player;
     public bool playerIsAlive {get; protected set;} = true;
-
+    
+    public int GetHeight => _height;
+    public int GetWidth => _width;
     public bool TryMoveMainPlayer(int y, int x)
     {
         if (!CheckIfTileIsReachable(_player.PosY + y, _player.PosX + x))
@@ -27,11 +29,11 @@ public class Map
     }
     // // ========================================================================
 
-    private bool CheckIfPositionIsOnMap(int y, int x)
+    public bool CheckIfPositionIsOnMap(int y, int x)
     {
         return x >= 0 && x < _width && y >= 0 && y < _height;
     }
-    private bool CheckIfTileIsReachable(int y, int x)
+    public bool CheckIfTileIsReachable(int y, int x)
     {
         return CheckIfPositionIsOnMap(y, x) && _dungeonMap[y, x].NotAWallOrATrap;
     }

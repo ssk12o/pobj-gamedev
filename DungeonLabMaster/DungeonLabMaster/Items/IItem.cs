@@ -17,4 +17,6 @@ public interface IItem
     public int GetDefenseForNormalAttack(IAliveEntity.PlayerStatsT stats) => stats.Agility;
     public int GetDefenseForSneakyAttack(IAliveEntity.PlayerStatsT stats) => 0;
     public int GetDefenseForMagicalAttack(IAliveEntity.PlayerStatsT stats) => stats.Luck;
+    
+    public int GetSoundValueAfterAction(IAliveEntity.PlayerStatsT playerStats) => (int) ESoundValue.Item;
 }

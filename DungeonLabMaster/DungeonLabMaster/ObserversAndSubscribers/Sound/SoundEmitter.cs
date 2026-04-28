@@ -1,0 +1,41 @@
+namespace DungeonLabMaster.SoundPropagation;
+
+public class SoundEmitter: ISubscribtionDealer
+{
+    private List<IObserverSubscriber> _observers = new List<IObserverSubscriber>();
+    
+    public void AddObserver(IObserverSubscriber observerSubscriber)
+    {
+        if (!_observers.Contains(observerSubscriber))
+        {
+            _observers.Add(observerSubscriber);
+        }
+    }
+
+    public void RemoveObserver(IObserverSubscriber observerSubscriber)
+    {
+        if (!_observers.Contains(observerSubscriber))
+        {
+            _observers.Remove(observerSubscriber);
+        }
+    }
+
+    public void Notify(INotification notification)
+    {
+        foreach (var observer in _observers)
+        {
+            observer.OnNotify(notification);
+        }
+    }
+
+    public int GetObserverCount()
+    {
+        return _observers.Count;
+    }
+
+    public void NotifySound(int y, int x, int sound)
+    {
+        INotification notification = new SoundNotification(y, x, sound);
+        Notify(notification);
+    }
+}

@@ -38,4 +38,5 @@ public class MagicalWeapon: IWeapon, IItem
     
     public int GetDefense(IWeaponVisitor visitor, IAliveEntity.PlayerStatsT stats) => visitor.CalculateDefense(this, stats); 
 
+    public int GetSoundValueAfterAction(IAliveEntity.PlayerStatsT playerStats) => (int)ESoundValue.MagicalWeapon;
 }
