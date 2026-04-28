@@ -6,16 +6,18 @@ namespace DungeonLabMaster.Map;
 
 public class DungeonMapBuilder: IDungeonMapBuilder
 {
+    bool _enemysAreStactionary;
     private List<IAliveEntity> _enemies = new List<IAliveEntity>();
     private bool _valid = false;
     private int  _width, _height;
     private Tile [,]? _dungeonMap;
     private List<string> _helpTextList;
-    public DungeonMapBuilder(int height = 20, int width = 40)
+    public DungeonMapBuilder(int height = 20, int width = 40, bool enemysAreStactionary = true)
     {
         Console.WriteLine("DungeonMapBuilder -- starting up");
         _width = width;
         _height = height;
+        _enemysAreStactionary = enemysAreStactionary;
     }
 
     public void AddCustomItem(IItem item)
@@ -42,7 +44,8 @@ public class DungeonMapBuilder: IDungeonMapBuilder
     {
         TestIfMapIsValid();
         _dungeonMap[0, 0].RemoveWallHere();
-        Map finalMap = new Map(_height, _width, _dungeonMap,  new Player(), _helpTextList, _enemies);
+        Map finalMap = new Map(_height, _width, _dungeonMap,  new Player(), _helpTextList, _enemies, _enemysAreStactionary);
+        finalMap.addEnemiesRefToMap();
         return finalMap;
     }
 

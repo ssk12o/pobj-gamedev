@@ -65,7 +65,7 @@ public class Combat
 
         int rawDamage = player.CalculateAttackDamage(vis);
         // Console.WriteLine($"raw damage {rawDamage}");
-        int realDamage = Math.Max(0, rawDamage - ((IEnemy)enemy).Armor);
+        int realDamage = Math.Max(0, rawDamage - ((Enemy.Enemy)enemy).Armor);
         
         Console.WriteLine($"Player attacks {enemy.Name} dealing {realDamage} dmg");
         Logger.Instance.Log($"Player attacks {enemy.Name} dealing {realDamage} dmg", ELogCategory.CombatInfo);
@@ -73,16 +73,16 @@ public class Combat
         if (enemy.TakeDamage(realDamage) <= 0)
         {
             active = false;
+            ((Enemy.Enemy)enemy).UnsubscribeAll();
             Logger.Instance.Log($"{_player.Name} slains {_enemy.Name}",  ELogCategory.CombatInfo);
-
         }
     }
 
     private void EnemyAttack(Player player, IAliveEntity enemy)
     {
         if(vis == null || active == false) return;
-        int rawDamage = ((IEnemy)enemy).attack;
-        int rawDefense = player.CalculateDefense(vis,  ((IWeapon)((IEnemy)enemy).weapon));
+        int rawDamage = ((Enemy.Enemy)enemy).attack;
+        int rawDefense = player.CalculateDefense(vis,  ((IWeapon)((Enemy.Enemy)enemy).weapon));
         int realDamage = Math.Max(0, rawDamage - rawDefense);
         
         Console.WriteLine($"{enemy.Name} attacks Player dealing {realDamage} dmg");

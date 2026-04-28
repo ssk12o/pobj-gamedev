@@ -2,9 +2,30 @@ namespace DungeonLabMaster.MovableEntities;
 
 public class Pathfinding
 {
-    public static int CalculateDistance(Map.Map map, int x1, int y1, int x2, int y2)
+    // private static Lazy<Pathfinding> _instance = new(() => new Pathfinding());
+    // private Map.Map _map;
+    // public static Pathfinding Instance => _instance.Value;
+    //
+    // public static void Init(Map.Map map)
+    // {
+    //     if (_instance == null)
+    //     {
+    //         _instance = Pathfinding(map);
+    //     }
+    // }
+    //
+    // public Pathfinding(Map.Map map)
+    // {
+    //     _map = map;
+    // }
+    //
+    // private Pathfinding()
+    // {
+    //     throw new Exception();
+    // }
+    public static int CalculateDistance( int x1, int y1, int x2, int y2, Map.Map _map)
     {
-        if (map == null || x1 == x2 && y1 == y2) return 0;
+        if (_map == null || x1 == x2 && y1 == y2) return 0;
         
         var queue = new Queue<(int x, int y, int distance)>();
         var visited = new HashSet<(int, int)>();
@@ -29,9 +50,9 @@ public class Pathfinding
                     return current.distance + 1;
                 }
                 
-                if (nx >= 0 && nx < map.GetWidth && 
-                    ny >= 0 && ny < map.GetHeight &&
-                    !map.CheckIfTileIsReachable(ny, nx) &&
+                if (nx >= 0 && nx < _map.GetWidth && 
+                    ny >= 0 && ny < _map.GetHeight &&
+                    !_map.CheckIfTileIsReachable(ny, nx) &&
                     !visited.Contains((nx, ny)))
                 {
                     visited.Add((nx, ny));
@@ -43,9 +64,9 @@ public class Pathfinding
         return int.MaxValue;
     }
 
-    public static bool CanReach(Map.Map map, int x1, int y1, int x2, int y2, int maxDistance)
+    public static bool CanReach(int x1, int y1, int x2, int y2, int maxDistance, Map.Map _map)
     {
-        int distance = CalculateDistance(map, x1, y1, x2, y2);
+        int distance = CalculateDistance(x1, y1, x2, y2, _map);
         return distance <= maxDistance;
     }
 }

@@ -8,6 +8,7 @@ namespace DungeonLabMaster.Map;
 
 public class Map
 {
+    private bool _enemiesAreStactionary;
     private int _movementRound;
     private int _height, _width;
     private Tile[,] _dungeonMap;
@@ -53,7 +54,7 @@ public class Map
         }
         _player = new Player();
     }
-    public Map(int height, int width, Tile[,] generatedDungeonMap, Player player,  List<string> helpTextList, List<IAliveEntity> enemies)
+    public Map(int height, int width, Tile[,] generatedDungeonMap, Player player,  List<string> helpTextList, List<IAliveEntity> enemies, bool enemiesAreStactionary)
     {
         _enemies = enemies;
         _width = width;
@@ -61,6 +62,7 @@ public class Map
         _dungeonMap = generatedDungeonMap;
         _player = player;
         HelpTextList = helpTextList;
+        _enemiesAreStactionary =  enemiesAreStactionary;
     }
 
     // // ========================================================================
@@ -102,6 +104,22 @@ public class Map
         return sb;
     }
 
+    public void MoveEnemiesRandomly()
+    {
+        if(_enemiesAreStactionary) return;
+        
+        foreach (IAliveEntity entity in _enemies)
+        {
+            if (entity is Enemy enemy)
+            {
+                enemy.MoveRandom();
+            }
+            else
+            {
+                throw new Exception("Enemy is somehow not enemy");
+            }
+        }
+    }
     private int getSBidxFromXY(int y, int x)
     {
         return y * (_width + 1) + x;
@@ -240,5 +258,17 @@ public class Map
     {
         Console.Clear();
         Console.Write(_player.GetInventoryContentsLongSb().ToString());
+    }
+
+    public void addEnemiesRefToMap()
+    {
+        foreach (IAliveEntity aliveEntity in _enemies)
+        {
+            // a tak zamiast casta, mamy pewność typu
+            if (aliveEntity is Enemy enemy)
+            {
+                enemy.addMapRef(this);
+            }
+        }
     }
 }

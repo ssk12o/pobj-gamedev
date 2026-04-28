@@ -3,7 +3,7 @@ using DungeonLabMaster.Items.Weapons;
 
 namespace DungeonLabMaster.MovableEntities.Enemy;
 
-public class Robot: IAliveEntity, IEnemy
+public class Robot: Enemy, IAliveEntity
 {
     public int attack { get; set; } = 10;
     public int Armor {get; }
@@ -18,19 +18,9 @@ public class Robot: IAliveEntity, IEnemy
     public IAliveEntity.PlayerStatsT Playerstats { get; protected set; }
 
 
-    public Robot(int y, int x, IItem weapn, int hp = 10)
+    public Robot(int y, int x, IItem weapn, int hp = 10): base( y, x, weapn, "Goblin", hp)
     {
-        PosY = y;
-        PosX = x;
-        weapon = weapn;
-        Playerstats = new IAliveEntity.PlayerStatsT();
-        Playerstats.Health = Playerstats.MaxHealth = hp;
-        Armor = 2;
-    }
-    
-    public bool Move(int y, int x)
-    {
-        throw new NotImplementedException();
+        ;
     }
 
     public int CalculateAttackDamage(IWeaponVisitor vis)

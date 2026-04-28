@@ -3,7 +3,7 @@ using DungeonLabMaster.Items.Weapons;
 
 namespace DungeonLabMaster.MovableEntities.Enemy;
 
-public class Safe: IAliveEntity, IEnemy
+public class Safe: Enemy
 {
     public int Armor {get; }
     public int attack { get; set; } = 10;
@@ -15,19 +15,9 @@ public class Safe: IAliveEntity, IEnemy
     public IItem weapon { get; set; }
     public IAliveEntity.PlayerStatsT Playerstats { get; protected set; }
 
-    public Safe(int y, int x, IItem weapn, int hp = 10)
+    public Safe(int y, int x, IItem weapn, int hp = 10): base( y, x, weapn,"Safe", hp)
     {
-        PosY = y;
-        PosX = x;
-        weapon = weapn;
-        Playerstats = new IAliveEntity.PlayerStatsT();
-        Playerstats.Health = Playerstats.MaxHealth = hp;
-        Armor = 2;
-    }
-    
-    public bool Move(int y, int x)
-    {
-        throw new NotImplementedException();
+        ;
     }
 
     public int CalculateAttackDamage(IWeaponVisitor vis)

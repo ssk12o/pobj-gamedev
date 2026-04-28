@@ -2,6 +2,7 @@ using System.Text;
 using DungeonLabMaster.Items;
 using DungeonLabMaster.Items.Weapons;
 using DungeonLabMaster.Logging;
+using DungeonLabMaster.SoundPropagation;
 
 namespace DungeonLabMaster.MovableEntities;
 
@@ -88,6 +89,8 @@ public class Player: IAliveEntity
                 break;
         }
         
+        
+        SoundSingleton.Instance.Emitter.NotifySound(PosY, PosX, item.GetSoundValueAfterAction(Playerstats));
         Logger.Instance.Log($"Player handed {item.Name}", ELogCategory.HandInfo);
     }
     public void UnhandItem()
@@ -139,6 +142,7 @@ public class Player: IAliveEntity
         IItem ret = _inventory[number];
         _inventory.RemoveAt(number);
         
+        SoundSingleton.Instance.Emitter.NotifySound(PosY, PosX, ret.GetSoundValueAfterAction(Playerstats));
         Logger.Instance.Log($"Player removed {ret.Name} from inventory", ELogCategory.InventoryInfo);
         return ret;
     }

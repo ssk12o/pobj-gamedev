@@ -12,6 +12,8 @@ public class GameCommandInvalidInput: GameCommandCoRBase
             Console.WriteLine("invalid input");
             Thread.Sleep(5000);
         }
+        
+        mapa.MoveEnemiesRandomly();
         return true;
     }
 }

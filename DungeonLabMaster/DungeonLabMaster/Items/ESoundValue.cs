@@ -2,8 +2,8 @@ namespace DungeonLabMaster.Items;
 
 public enum ESoundValue
 {
-    Item  = 2,
+    Item  = 100,
     LightWeapon = 4,
-    HeavyWeapon  = 8,
-    MagicalWeapon = 6
+    MagicalWeapon = 100,
+    HeavyWeapon = 20,
 }
