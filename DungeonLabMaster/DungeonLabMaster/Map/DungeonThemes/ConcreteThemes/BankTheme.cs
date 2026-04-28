@@ -9,9 +9,8 @@ namespace DungeonLabMaster.DungeonThemes;
 public class BankTheme: IDungeonTheme
 {
     public string ThemeName => "Rich bank theme";
-
     public string ThemeIntroductionMessage =>"Czujesz swędzenie w portfelu\": duży centralny pokój (skarbiec) z wieloma korytarzami, w lochu można znaleźć tylko monety, złoto, \"Szczęśliwą Sakwę Monet\" (broń dwuręczną) oraz ożywione i agresywne teczki i sejfy.";
-    public IDungeonStrategy GenerationStrategy => new DungeonStrategyMapArena();
+    public IDungeonStrategy GenerationStrategy => new DungeonStrategyClassic();
     public IDungeonItemFactory ItemFactory => new BankItemFactory();
     public IEnemyFactory EnemyFactory => new BankEnemyFactory(ItemFactory);
     
