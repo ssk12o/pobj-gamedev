@@ -11,16 +11,16 @@ public class Mage: Enemy, IAliveEntity
         ;
     }
 
-    public override void OnNotify(INotification notification)
-    {
-        if (notification is SoundNotification sondNotification)
-        {
-            base.OnNotify(notification);
-        }
-        else
-        {
-            Console.WriteLine("dupa");
-            throw new Exception("dupa");
-        }
-    }
+    // public override void OnNotify(INotification notification)
+    // {
+    //     if (notification is SoundNotification sondNotification)
+    //     {
+    //         base.OnNotify(notification);
+    //     }
+    //     else
+    //     {
+    //         Console.WriteLine("dupa");
+    //         throw new Exception("dupa");
+    //     }
+    // }
 }

@@ -10,7 +10,15 @@ public class LibraryEnemyFactory: IEnemyFactory
     }
     public IAliveEntity CreateEnemy(int y, int x)
     {
-        return new Mage(y, x, _itemFactory.CreateNewRandomWeapon(), 2);
+        int val = Random.Shared.Next(0, 100);
+        if (val < 70)
+        {
+            return new Mage(y, x, _itemFactory.CreateNewRandomWeapon(), 2);
+        }
+        else
+        {
+            return new Librarian(y, x, _itemFactory.CreateNewRandomWeapon(), 30);
+        }
     }
     
 }
