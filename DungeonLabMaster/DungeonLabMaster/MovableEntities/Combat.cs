@@ -2,6 +2,7 @@ using System.ComponentModel;
 using DungeonLabMaster.Items.Weapons;
 using DungeonLabMaster.Logging;
 using DungeonLabMaster.MovableEntities.Enemy;
+using DungeonLabMaster.SoundPropagation;
 
 namespace DungeonLabMaster.MovableEntities;
 
@@ -74,6 +75,7 @@ public class Combat
         {
             active = false;
             ((Enemy.Enemy)enemy).UnsubscribeAll();
+            EnemyDeathSingleton.Instance.GetEmmiter(enemy.Name).NotifyDeath(_enemy.PosY, _enemy.PosX);
             Logger.Instance.Log($"{_player.Name} slains {_enemy.Name}",  ELogCategory.CombatInfo);
         }
     }

@@ -14,7 +14,7 @@ public class SoundEmitter: ISubscribtionDealer
 
     public void RemoveObserver(IObserverSubscriber observerSubscriber)
     {
-        if (!_observers.Contains(observerSubscriber))
+        if (_observers.Contains(observerSubscriber))
         {
             _observers.Remove(observerSubscriber);
         }

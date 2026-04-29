@@ -19,16 +19,31 @@ public class Enemy: IObserverSubscriber, IAliveEntity
 
     public void SubscribeAll()
     {
-        // #if debug
         Console.WriteLine("subscribing");
-        // #endif?
         SoundSingleton.Instance.Emitter.AddObserver(this);
+        
+        Console.WriteLine("unsubscribing deatg, counts");
+        Console.WriteLine(EnemyDeathSingleton.Instance.GetEmmiter(Name).GetObserverCount());
         EnemyDeathSingleton.Instance.GetEmmiter(Name).AddObserver(this);
+        Console.WriteLine(EnemyDeathSingleton.Instance.GetEmmiter(Name).GetObserverCount());
+
     }
     public void UnsubscribeAll()
     {
         SoundSingleton.Instance.Emitter.RemoveObserver(this);
         EnemyDeathSingleton.Instance.GetEmmiter(Name).RemoveObserver(this);
+        
+        // DEBUG INFO
+        // Console.WriteLine("unsubscribing sound, counts");
+        // Console.WriteLine(SoundSingleton.Instance.Emitter.GetObserverCount());
+        // Console.WriteLine(SoundSingleton.Instance.Emitter.GetObserverCount());
+        // Console.WriteLine("unsubscribing sound, end");
+        //
+        // Console.WriteLine("unsubscribing deatg, counts");
+        // Console.WriteLine(EnemyDeathSingleton.Instance.GetEmmiter(Name).GetObserverCount());
+        // Console.WriteLine(EnemyDeathSingleton.Instance.GetEmmiter(Name).GetObserverCount());
+        // Console.WriteLine("unsubscribing death, end");
+
     }
 
     public virtual void OnNotify(INotification notification)

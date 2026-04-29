@@ -11,7 +11,7 @@ public class LibraryEnemyFactory: IEnemyFactory
     public IAliveEntity CreateEnemy(int y, int x)
     {
         int val = Random.Shared.Next(0, 100);
-        if (val < 70)
+        if (val < 50)
         {
             return new Mage(y, x, _itemFactory.CreateNewRandomWeapon(), 2);
         }
@@ -20,5 +20,4 @@ public class LibraryEnemyFactory: IEnemyFactory
             return new Librarian(y, x, _itemFactory.CreateNewRandomWeapon(), 30);
         }
     }
-    
 }

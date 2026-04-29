@@ -10,7 +10,14 @@ public class BankEnemyFactory: IEnemyFactory
     }
     public IAliveEntity CreateEnemy(int y, int x)
     {
-        return new Safe(y, x, _itemFactory.CreateNewRandomWeapon(), 2);
+        int val = Random.Shared.Next(0, 100);
+        if (val < 70)
+        {
+            return new Safe(y, x, _itemFactory.CreateNewRandomWeapon(), 2);
+        }
+        else
+        {
+            return new Banker(y, x, _itemFactory.CreateNewRandomWeapon(), 30);
+        }
     }
-    
 }
