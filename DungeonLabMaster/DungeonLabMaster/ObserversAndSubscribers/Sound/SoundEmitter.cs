@@ -35,7 +35,7 @@ public class SoundEmitter: ISubscribtionDealer
 
     public void NotifySound(int y, int x, int sound)
     {
-        INotification notification = new SoundNotification(y, x, sound);
+        INotification notification = new SoundNotification(x, y, sound);
         Notify(notification);
     }
 }

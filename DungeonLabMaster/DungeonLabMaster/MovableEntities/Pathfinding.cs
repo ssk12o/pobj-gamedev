@@ -52,7 +52,7 @@ public class Pathfinding
                 
                 if (nx >= 0 && nx < _map.GetWidth && 
                     ny >= 0 && ny < _map.GetHeight &&
-                    !_map.CheckIfTileIsReachable(ny, nx) &&
+                    _map.CheckIfTileIsReachable(ny, nx) &&
                     !visited.Contains((nx, ny)))
                 {
                     visited.Add((nx, ny));

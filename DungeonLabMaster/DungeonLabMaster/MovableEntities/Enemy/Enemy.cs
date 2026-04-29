@@ -19,6 +19,9 @@ public class Enemy: IObserverSubscriber, IAliveEntity
 
     public void SubscribeAll()
     {
+        // #if debug
+        Console.WriteLine("subscribing");
+        // #endif?
         SoundSingleton.Instance.Emitter.AddObserver(this);
         EnemyDeathSingleton.Instance.GetEmmiter(Name).AddObserver(this);
     }
@@ -30,14 +33,24 @@ public class Enemy: IObserverSubscriber, IAliveEntity
 
     public virtual void OnNotify(INotification notification)
     {
-        Logger.Instance.Log("enemy processes sound");
+        // Logger.Instance.Log("enemy processes sound");
         if (notification is SoundNotification sondNotification)
         {
             if (Pathfinding.CanReach(notification.sourceX, notification.sourceY, PosX, PosY,
                     sondNotification.NoiseLevel, gameMapRef))
+
             {
-                Logger.Instance.Log($"Enemy {Name} at {PosX},{PosY}: hears player make sound {sondNotification.NoiseLevel}");
+                sondNotification.Distance = Pathfinding.CalculateDistance(notification.sourceX, notification.sourceY, PosX, PosY, gameMapRef);
+                Logger.Instance.Log($"Enemy {Name} at {PosX},{PosY}: hears player make sound at {sondNotification.Distance}/{sondNotification.NoiseLevel}", ELogCategory.SoundInfo);
             }
+        } 
+        else if (notification is DeathNotification deathNotification)
+        {
+            Logger.Instance.Log($"Enemy {Name} at {PosX},{PosY}: hear their mate die at {deathNotification.sourceX}, {deathNotification.sourceY}", ELogCategory.SoundInfo);
+        }
+        else
+        {
+            throw new Exception("wrong notification type");
         }
     }
     public Enemy(int y, int x, IItem weapn,  string myName,int hp = 10)
@@ -51,7 +64,6 @@ public class Enemy: IObserverSubscriber, IAliveEntity
         Name = myName;
         MapChar = Name[0];
         SubscribeAll();
-        
     }
 
     public void addMapRef(Map.Map map)

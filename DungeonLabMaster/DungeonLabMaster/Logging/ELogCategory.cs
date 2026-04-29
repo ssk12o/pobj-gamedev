@@ -8,5 +8,6 @@ public enum ELogCategory
     InventoryInfo,
     HandInfo,
     CombatInfo,
+    SoundInfo,
     DuelInfo
 }
