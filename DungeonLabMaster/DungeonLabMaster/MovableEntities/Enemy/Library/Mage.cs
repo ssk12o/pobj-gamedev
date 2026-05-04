@@ -1,12 +1,13 @@
 using DungeonLabMaster.Items;
 using DungeonLabMaster.Items.Weapons;
+using DungeonLabMaster.MovableEntities.Enemy.enemyDeathTriggers;
 using DungeonLabMaster.SoundPropagation;
 
 namespace DungeonLabMaster.MovableEntities.Enemy;
 
 public class Mage: Enemy, IAliveEntity
 {
-    public Mage(int y, int x, IItem weapn, int hp = 10): base(y, x, weapn, "Mage", hp)
+    public Mage(int y, int x, IItem weapn, int hp = 10): base(y, x, weapn, "Mage", hp, new eDTCowardly())
     {
         ;
     }

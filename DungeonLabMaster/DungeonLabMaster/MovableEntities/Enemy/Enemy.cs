@@ -1,6 +1,7 @@
 using DungeonLabMaster.Items;
 using DungeonLabMaster.Items.Weapons;
 using DungeonLabMaster.Logging;
+using DungeonLabMaster.MovableEntities.Enemy.enemyDeathTriggers;
 using DungeonLabMaster.SoundPropagation;
 
 namespace DungeonLabMaster.MovableEntities.Enemy;
@@ -10,9 +11,22 @@ public class Enemy: IObserverSubscriber, IAliveEntity
     public IItem weapon { get; protected set; }
     public int attack { get; protected set; }
     public int Armor {get; }
-    public string Name { get; }
+    public string Name { get; protected set; }
     public char MapChar { get; }
-    public IAliveEntity.PlayerStatsT Playerstats { get; }
+    public IAliveEntity.PlayerStatsT Playerstats { get; private set; }
+    private bool deathEnemy = false;
+    private IenemyDeathTrigger _deathEnemyTypeTrigger { get; }
+
+    public void mateDied()
+    {
+        if (!deathEnemy && _deathEnemyTypeTrigger != null)
+        {
+            Logger.Instance.Log($"{Name} becomes {_deathEnemyTypeTrigger.GetTriggerText()}", ELogCategory.CombatInfo);
+            Name = $"{_deathEnemyTypeTrigger.GetTriggerText()}";
+            Playerstats += _deathEnemyTypeTrigger.getStatsChagne();
+            deathEnemy  = true;
+        }
+    }
     public int PosX { get; set; }
     public int PosY { get; set; }
     private Map.Map gameMapRef;
@@ -61,14 +75,15 @@ public class Enemy: IObserverSubscriber, IAliveEntity
         } 
         else if (notification is DeathNotification deathNotification)
         {
-            Logger.Instance.Log($"Enemy {Name} at {PosX},{PosY}: hear their mate die at {deathNotification.sourceX}, {deathNotification.sourceY}", ELogCategory.SoundInfo);
+            mateDied();
+            Logger.Instance.Log($"Enemy {Name} at {PosX},{PosY}: hear their mate die at ({deathNotification.sourceY}, {deathNotification.sourceX})", ELogCategory.SoundInfo);
         }
         else
         {
             throw new Exception("wrong notification type");
         }
     }
-    public Enemy(int y, int x, IItem weapn,  string myName,int hp = 10)
+    public Enemy(int y, int x, IItem weapn,  string myName,int hp = 10, IenemyDeathTrigger trigger =  null)
     {
         PosY = y;
         PosX = x;
@@ -78,7 +93,9 @@ public class Enemy: IObserverSubscriber, IAliveEntity
         Armor = 2;
         Name = myName;
         MapChar = Name[0];
+        _deathEnemyTypeTrigger  = trigger;
         SubscribeAll();
+        
     }
 
     public void addMapRef(Map.Map map)
