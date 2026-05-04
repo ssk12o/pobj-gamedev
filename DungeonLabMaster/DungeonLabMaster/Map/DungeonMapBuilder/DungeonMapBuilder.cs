@@ -12,7 +12,8 @@ public class DungeonMapBuilder: IDungeonMapBuilder
     private int  _width, _height;
     private Tile [,]? _dungeonMap;
     private List<string> _helpTextList;
-    public DungeonMapBuilder(int height = 20, int width = 40, bool enemysAreStactionary = true)
+    // change to make enemeis move
+    public DungeonMapBuilder(int height = 20, int width = 40, bool enemysAreStactionary = false)
     {
         Console.WriteLine("DungeonMapBuilder -- starting up");
         _width = width;

@@ -65,7 +65,6 @@ public class Combat
         if(vis == null || active == false) return;
 
         int rawDamage = player.CalculateAttackDamage(vis);
-        // Console.WriteLine($"raw damage {rawDamage}");
         int realDamage = Math.Max(0, rawDamage - ((Enemy.Enemy)enemy).Armor);
         
         Console.WriteLine($"Player attacks {enemy.Name} dealing {realDamage} dmg");
