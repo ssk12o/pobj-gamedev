@@ -7,9 +7,10 @@ public class ConfigFasade
     public static GameConfig Load(string ConfigFilePath)
     {
         var config = new GameConfig();
-        if (File.Exists(ConfigFilePath))
+        var path = Path.Combine(AppContext.BaseDirectory, $"./../../../{ConfigFilePath}");
+        if (File.Exists(path))
         {
-            var json = File.ReadAllText(ConfigFilePath);
+            var json = File.ReadAllText(path);
             var doc = JsonDocument.Parse(json);
             var root = doc.RootElement;
 
@@ -24,6 +25,12 @@ public class ConfigFasade
             if (root.TryGetProperty("logPath", out var logPath))
             {
                 config.LogFilePath = logPath.GetString();
+            }
+
+            if (root.TryGetProperty("enemiesMove", out var enemiesMove))
+            {
+                bool.TryParse(enemiesMove.GetString(), out bool move);
+                config.enemiesMove = move;
             }
         }
         return config;

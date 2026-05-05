@@ -13,7 +13,7 @@ public class DungeonMapBuilder: IDungeonMapBuilder
     private Tile [,]? _dungeonMap;
     private List<string> _helpTextList;
     // change to make enemeis move
-    public DungeonMapBuilder(int height = 20, int width = 40, bool enemysAreStactionary = false)
+    public DungeonMapBuilder(bool enemysAreStactionary = false, int height = 20, int width = 40)
     {
         Console.WriteLine("DungeonMapBuilder -- starting up");
         _width = width;

@@ -12,7 +12,7 @@ public class MainGame
 {
     public static void RunGame()
     {
-        var config = ConfigFasade.Load("logs/config");
+        var config = ConfigFasade.Load("game_config.json");
         var logPath = LogFileFactory.CreateUniqueLogPath(config.LogFilePath, config.PlayerName);
         
         var fileLogger = new FileLoggerType(logPath);
