@@ -18,7 +18,7 @@ public class DungeonMapBuilder: IDungeonMapBuilder
         Console.WriteLine("DungeonMapBuilder -- starting up");
         _width = width;
         _height = height;
-        _enemysAreStactionary = enemysAreStactionary;
+        _enemysAreStactionary = !enemysAreStactionary;
     }
 
     public void AddCustomItem(IItem item)

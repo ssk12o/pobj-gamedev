@@ -27,7 +27,7 @@ public class MainGame
         var theme = ThemeFactory.GetTheme(config.DungeonName);
         Logger.Instance.Log(theme.ThemeIntroductionMessage, ELogCategory.Other);
 
-        Map.Map mapa = theme.getMap();
+        Map.Map mapa = theme.getMap(config.enemiesMove);
         
         WelcomeMessage();
         EventLoop(mapa);
